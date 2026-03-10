@@ -32,9 +32,9 @@
 
 Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon 🔗 untuk masuk ke folder materi.
 
-| Materi / Topik | Deskripsi Singkat                             |          Tautan          |
-| :------------- | :-------------------------------------------- | :----------------------: |
-| **HTML**       | Struktur dasar, tag, dan elemen semantik web. | [🔗 Buka](./tugas1-html) |
+| Materi / Topik | Deskripsi Singkat                             |          Tautan           |
+| :------------- | :-------------------------------------------- | :-----------------------: |
+| **HTML**       | Struktur dasar, tag, dan elemen semantik web. | [🔗 Buka](./tugas01-html) |
 
 <!--
 | **CSS**                 | Styling, layouting (Flexbox/Grid), dan responsivitas.         |            [🔗 Buka](./css)             |
