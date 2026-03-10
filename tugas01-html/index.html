@@ -3,7 +3,182 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>PitStop</title>
+    <link
+      rel="icon"
+      href="favicon-dark.ico"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      href="favicon-light.ico"
+      media="(prefers-color-scheme: light)"
+    />
   </head>
-  <body></body>
+
+  <body>
+    <header>
+      <div class="logo">
+        <img src="pitstop-logo.png" alt="Logo PitStop" height="100px" />
+        <h1>PitStop - Sistem Antrean Cerdas & Booking Bengkel</h1>
+      </div>
+      <div class="user-info">
+        <span>Halo, <strong>Pelanggan</strong></span>
+      </div>
+    </header>
+
+    <!-- 2. Navbar -->
+    <nav>
+      <ul>
+        <li><a href="#">Beranda</a></li>
+        <li><a href="#">Booking</a></li>
+        <li><a href="#">Riwayat Antrean</a></li>
+        <li><a href="#">Profil</a></li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <!-- 5. Sidebar dengan statistik sederhana -->
+      <aside>
+        <h3>Statistik Hari Ini</h3>
+        <div class="stat-card">
+          <h4>Total Booking</h4>
+          <p>12</p>
+        </div>
+        <div class="stat-card">
+          <h4>Menunggu</h4>
+          <p>5</p>
+        </div>
+        <div class="stat-card">
+          <h4>Sedang Dikerjakan</h4>
+          <p>3</p>
+        </div>
+        <div class="stat-card">
+          <h4>Selesai</h4>
+          <p>4</p>
+        </div>
+      </aside>
+
+      <main>
+        <!-- 3. Form Input -->
+        <section class="card">
+          <h2>Form Booking Jadwal</h2>
+          <form>
+            <div class="form-group">
+              <label for="nama">Nama Lengkap</label>
+              <input
+                type="text"
+                id="nama"
+                name="nama"
+                placeholder="Masukkan nama Anda"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="plat">Nomor Plat Kendaraan</label>
+              <input
+                type="text"
+                id="plat"
+                name="plat"
+                placeholder="B 1234 XYZ"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="jenis_servis">Jenis Servis</label>
+              <select id="jenis_servis" name="jenis_servis" required>
+                <option value="">Pilih Servis...</option>
+                <option value="ganti_oli">Ganti Oli (30 Menit)</option>
+                <option value="servis_berkala">
+                  Servis Berkala (120 Menit)
+                </option>
+                <option value="rem">Perbaikan Rem (60 Menit)</option>
+                <option value="diagnosa">Diagnosa Mesin (45 Menit)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tanggal">Tanggal</label>
+              <input type="date" id="tanggal" name="tanggal" required />
+            </div>
+            <div class="form-group">
+              <label for="jam">Waktu Kedatangan</label>
+              <input
+                type="time"
+                id="jam"
+                name="jam"
+                min="08:00"
+                max="17:00"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="mekanik">Pilih Mekanik (Opsional)</label>
+              <select id="mekanik" name="mekanik">
+                <option value="default">Sistem yang Menentukan</option>
+                <option value="mekanik_1">Budi (Ahli Mesin)</option>
+                <option value="mekanik_2">Andi (Ahli Kelistrikan)</option>
+              </select>
+            </div>
+            <button type="submit">Booking Sekarang</button>
+          </form>
+        </section>
+
+        <!-- Tabel Antrean -->
+        <section class="card">
+          <h2>Daftar Antrean Saat Ini</h2>
+          <table border="1">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kendaraan</th>
+                <th>Servis</th>
+                <th>Jadwal</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Kholish Nur</td>
+                <td>B 1234 XYZ</td>
+                <td>Ganti Oli</td>
+                <td>09:00 - 09:30</td>
+                <td>
+                  <span class="status-badge status-processing">Dikerjakan</span>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Siti Aminah</td>
+                <td>D 5678 ABC</td>
+                <td>Servis Berkala</td>
+                <td>10:00 - 12:00</td>
+                <td>
+                  <span class="status-badge status-pending">Menunggu</span>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Budi Santoso</td>
+                <td>F 9012 IJ</td>
+                <td>Perbaikan Rem</td>
+                <td>13:00 - 14:00</td>
+                <td>
+                  <span class="status-badge status-pending">Menunggu</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <hr />
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 PitStop - Sistem Antrean Cerdas Bengkel.</p>
+    </footer>
+  </body>
 </html>
