@@ -28,9 +28,9 @@
 
 ---
 
-## 📂 Alur Pembelajaran & Direktori Tugas
+## 📂 Direktori Tugas
 
-Berikut adalah rekam jejak pembelajaran selama satu semester. Klik pada ikon 🔗 untuk masuk ke folder materi.
+Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon 🔗 untuk masuk ke folder materi.
 
 | Materi / Topik | Deskripsi Singkat                             |      Tautan       |
 | :------------- | :-------------------------------------------- | :---------------: |
