@@ -73,8 +73,6 @@ Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon ğŸ”
   File utama (misalnya: <small>`index.html`</small>) dapat dijalankan secara langsung melalui peramban (_browser_). Penggunaan ekstensi **Live Server** pada Visual Studio Code juga sangat direkomendasikan. <br>
   Eksekusi juga dapat dilakukan melalui terminal dengan perintah berikut, bergantung pada sistem operasi yang digunakan:
 
-  <br>
-
   **Windows:**
 
   ```Bash
