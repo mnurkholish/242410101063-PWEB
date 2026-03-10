@@ -69,8 +69,31 @@ Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon ðŸ”
    ```
 3. **Prosedur Menjalankan Program:**
 
-- **Bagi Tugas HTML, CSS, & Javascript:** FIle utama (misalnya: <small>`index.html`</small>) dapat dijalankan secara langsung melalui peramban (_browser_). Penggunaan ekstensi **Live Server** pada Visual Studio Code sangat direkomendasikan untuk memfasilitasi proses ini.
-<!-- - **Bagi Tugas PHP (Server-side):** Lingkungan _local web server_ seperti **XAMPP** atau **Laragon** wajib dikonfigurasi terlebih dahulu.
+- **Bagi Tugas HTML, CSS, & Javascript:**
+  File utama (misalnya: <small>`index.html`</small>) dapat dijalankan secara langsung melalui peramban (_browser_). Penggunaan ekstensi **Live Server** pada Visual Studio Code juga sangat direkomendasikan. <br>
+  Eksekusi juga dapat dilakukan melalui terminal dengan perintah berikut, bergantung pada sistem operasi yang digunakan:
+
+  <br>
+
+  **Windows:**
+
+  ```Bash
+  start index.html
+  ```
+
+  **macOS:**
+
+  ```Bash
+  open index.html
+  ```
+
+  **Linux:**
+
+  ```Bash
+  xdg-open index.html
+  ```
+
+  <!-- - **Bagi Tugas PHP (Server-side):** Lingkungan _local web server_ seperti **XAMPP** atau **Laragon** wajib dikonfigurasi terlebih dahulu.
   1. Folder repositori dipindahkan ke dalam direktori <small>`htdocs`</small> (pada XAMPP) atau <small>`www`</small> (pada Laragon).
   2. Aplikasi XAMPP/Laragon dijalankan, diikuti dengan aktivasi modul **Apache** dan **MySQL**.
   3. Peramban dibuka, dan URL berikut diakses: <small>`http://localhost/nama-repo/nama-folder-tugas`</small> -->
