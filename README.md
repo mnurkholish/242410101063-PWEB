@@ -5,7 +5,8 @@
   <h1>📚 Repository Tugas Pemrograman Berbasis Web (PWEB)</h1>
   
   <p>
-    Kumpulan tugas mata kuliah Pemrograman Berbasis Web (PWEB).
+    Kumpulan tugas mata kuliah Pemrograman Berbasis Web (PWEB). <br>
+    <i>Proyek ini dikembangkan secara bertahap (incremental) dalam satu codebase.</i>
   </p>
 
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" />
@@ -28,26 +29,16 @@
 
 ---
 
-## 📂 Direktori Tugas
+## 📈 Log Progres Tugas
 
-Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon 🔗 untuk masuk ke folder materi.
+Karena tugas ini bersifat berkelanjutan dalam satu proyek, tabel di bawah ini berfungsi sebagai **checkpoint**. Keadaan kode pada setiap tahap tugas dapat dilihat melalui tautan riwayat (commit/tag) di kolom paling kanan..
 
-| Materi / Topik | Deskripsi Singkat                             |          Tautan           |
-| :------------- | :-------------------------------------------- | :-----------------------: |
-| **HTML**       | Struktur dasar, tag, dan elemen semantik web. | [🔗 Buka](./tugas01-html) |
+| Tugas       | Materi / Deskripsi                                            |                          Kode / Snapshot                          |
+| :---------- | :------------------------------------------------------------ | :---------------------------------------------------------------: |
+| **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web. | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB) |
 
 <!--
-| **CSS**                 | Styling, layouting (Flexbox/Grid), dan responsivitas.         |            [🔗 Buka](./css)             |
-| **Javascript**          | Manipulasi DOM, event listener, dan logika JS.                |         [🔗 Buka](./javascript)         |
-| **PHP**                 | Pemrograman server-side dasar dan integrasi form.             |            [🔗 Buka](./php)             |
-| **Laravel - Basic**     | Instalasi, Routing, Controller, dan Blade/View.               |       [🔗 Buka](./laravel-basic)        |
-| **Migration & Seeding** | Perancangan skema database dan pembuatan _dummy data_.        | [🔗 Buka](./laravel-migration-seeding)  |
-| **Form Handling**       | Request, validasi input pengguna, dan perlindungan CSRF.      |       [🔗 Buka](./form-handling)        |
-| **Async & Ajax**        | Request asinkronus tanpa reload halaman.                      | [🔗 Buka](./komunikasi-asinkronus-ajax) |
-| **Cookies & Session**   | Manajemen state, autentikasi, dan authorization dasar.        |      [🔗 Buka](./cookies-session)       |
-| **DB, CRUD, JSON**      | Operasi database penuh dengan interaksi berbasis JSON.        |  [🔗 Buka](./database-crud-ajax-json)   |
-| **Testing**             | Pengujian unit dan fitur pada aplikasi Laravel.               |          [🔗 Buka](./testing)           |
--->
+| **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.    | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB) | -->
 
 ---
 
@@ -62,12 +53,7 @@ Berikut adalah daftar tugas dan pembelajaran mata kuliah ini. Klik pada ikon �
    ```bash
    git clone https://github.com/mnurkholish/242410101063-PWEB.git
    ```
-2. **Pindah ke direktori tugas tujuan** <br>
-   Masuk ke dalam folder repository yang baru di-clone, lalu arahkan ke folder tugas yang ingin dilihat:
-   ```bash
-   cd 'nama-folder-tugas'
-   ```
-3. **Prosedur Menjalankan Program:**
+2. **Prosedur Menjalankan Program:**
 
 - **Bagi Tugas HTML, CSS, & Javascript:**
   File utama (misalnya: <small>`index.html`</small>) dapat dijalankan secara langsung melalui peramban (_browser_). Penggunaan ekstensi **Live Server** pada Visual Studio Code juga sangat direkomendasikan. <br>
