@@ -33,12 +33,12 @@
 
 Karena tugas ini bersifat berkelanjutan dalam satu proyek, tabel di bawah ini berfungsi sebagai **checkpoint**. Keadaan kode pada setiap tahap tugas dapat dilihat melalui tautan riwayat (commit/tag) di kolom paling kanan..
 
-| Tugas       | Materi / Deskripsi                                            |                          Kode / Snapshot                          |
-| :---------- | :------------------------------------------------------------ | :---------------------------------------------------------------: |
-| **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web. | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB) |
+| Tugas       | Materi / Deskripsi                                            | Id Commit |                                Kode / Snapshot                                 |
+| :---------- | :------------------------------------------------------------ | :-------: | :----------------------------------------------------------------------------: |
+| **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web. |  6fb84c8  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/6fb84c8) |
 
 <!--
-| **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.    | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB) | -->
+| **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.    |commit id| [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB) | -->
 
 ---
 
