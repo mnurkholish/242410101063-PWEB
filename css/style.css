@@ -1,0 +1,440 @@
+/* ==========================================================================
+   1. VARIABEL & RESET (Tema disesuaikan dengan referensi gambar)
+   ========================================================================== */
+:root {
+  --primary: #5b58ff; /* Warna ungu-biru utama dari gambar */
+  --primary-hover: #4845d4;
+  --secondary: #7874ff;
+  --bg-color: #f4f7ff;
+  --text-dark: #2b2b2b;
+  --text-muted: #6b6b6b;
+  --white: #ffffff;
+  --border: #e2e8f0;
+  --transition: all 0.3s ease-in-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #e8ecf8 0%, #f4f7ff 100%);
+  background-attachment: fixed;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   2. NAVBAR & HEADER (Flexbox, Mobile-First)
+   ========================================================================== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 5%;
+  background: var(--white);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Styling Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--primary);
+  border-radius: 4px;
+}
+
+.logo h1 {
+  font-size: 1.4rem;
+  color: #1a1a4b; /* Warna teks logo yang lebih gelap seperti di gambar */
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* --- MOBILE FIRST: Tampilan default disembunyikan dan vertikal --- */
+.nav-menu {
+  display: none; /* Disembunyikan di mobile sampai hamburger diklik */
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--white);
+  padding: 1.5rem 5%;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  gap: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.nav-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Styling Login (mirip teks "Contact") */
+.btn-login {
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 600;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.btn-login:hover {
+  color: var(--primary);
+}
+
+/* Styling Register (mirip tombol "Get Started") */
+.btn-register {
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.6rem 1.8rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.btn-register:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(91, 88, 255, 0.3);
+}
+
+/* --- LOGIKA HAMBURGER MENU (CSS Only) --- */
+.menu-toggle {
+  display: none;
+}
+
+.hamburger {
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: block; /* Muncul di layar kecil */
+  color: var(--text-dark);
+}
+
+/* Jika checkbox dicentang (hamburger diklik), tampilkan menu */
+.menu-toggle:checked ~ .nav-menu {
+  display: flex;
+}
+
+/* --- DESKTOP VIEW: Menyesuaikan tata letak gambar --- */
+@media (min-width: 992px) {
+  .hamburger {
+    display: none; /* Sembunyikan hamburger di desktop */
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: row;
+    position: static; /* Kembali ke aliran normal dokumen */
+    width: auto;
+    padding: 0;
+    box-shadow: none;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-between; /* Memisahkan link tengah dan tombol kanan */
+  }
+
+  .nav-links {
+    flex-direction: row;
+    gap: 2.5rem;
+    margin: 0 auto; /* Memaksa link berada tepat di tengah */
+  }
+
+  .nav-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+/* ==========================================================================
+   3. LAYOUT UTAMA & SIDEBAR STATISTIK (Mobile-First)
+   ========================================================================== */
+.container {
+  display: flex;
+  flex-direction: column; /* Mobile: Statistik dan Main content bertumpuk vertikal */
+  padding: 2rem 5%;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* --- Tampilan Mobile: Shrink/Mengecil --- */
+aside {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    1fr
+  ); /* Mobile: Dibagi 2 kolom kecil agar rapi dan tidak makan tempat */
+  gap: 1rem;
+  width: 100%;
+}
+
+aside h3 {
+  grid-column: 1 / -1; /* Memastikan judul tetap membentang penuh di atas kartu */
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 1rem; /* Padding diperkecil agar pas di mobile */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+  border-left: 5px solid var(--primary);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(91, 88, 255, 0.15);
+}
+
+.stat-card h4 {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.stat-card p {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* --- Tampilan Desktop: Sidebar di Kiri --- */
+@media (min-width: 992px) {
+  .container {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Membagi layar: Kiri 280px (Sidebar), Kanan sisanya (Main Content) */
+    align-items: start; /* Mencegah sidebar tertarik panjang mengikuti isi tabel di kanannya */
+  }
+
+  aside {
+    display: flex; /* Mengubah kembali menjadi flexbox untuk menyusun kartu ke bawah */
+    flex-direction: column;
+    position: sticky; /* Efek keren: Sidebar akan berhenti/mengambang saat Anda scroll ke bawah */
+    top: 100px;
+  }
+
+  .stat-card {
+    padding: 1.5rem; /* Mengembalikan ukuran padding normal di desktop */
+  }
+}
+
+/* ==========================================================================
+   4. FORM PENCARIAN & INPUT (Styling lengkap & Focus Effect)
+   ========================================================================== */
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.card h2 {
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fafbfa;
+  transition: var(--transition); /* Animasi 2 */
+}
+
+/* Focus Effect pada Form */
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(91, 88, 255, 0.15);
+}
+
+button[type="submit"] {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.8rem 2.5rem;
+  font-size: 1rem;
+  border-radius: 50px; /* Bentuk Pill seperti referensi gambar */
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  width: 100%;
+  margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(91, 88, 255, 0.3);
+}
+
+@media (min-width: 768px) {
+  button[type="submit"] {
+    width: auto; /* Button menyesuaikan konten di desktop */
+  }
+}
+
+/* ==========================================================================
+   5. TABEL DAFTAR DATA (Zebra striping, padding)
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  background-color: rgba(91, 88, 255, 0.05);
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+/* Zebra Striping */
+tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+tbody tr:hover {
+  background-color: #f0f4ff;
+  transition: background-color 0.2s ease;
+}
+
+/* Styling Badges Status */
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-processing {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-pending {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+/* Agar tabel responsif (bisa digeser di layar kecil) */
+@media (max-width: 768px) {
+  .card:nth-of-type(2) {
+    overflow-x: auto;
+  }
+  table {
+    min-width: 600px;
+  }
+}
+
+/* ==========================================================================
+   6. FOOTER (Responsif 3 Kolom - Disiapkan untuk masa depan)
+   ========================================================================== */
+hr {
+  display: none; /* Disembunyikan karena styling footer sudah memiliki background */
+}
+
+footer {
+  background: var(--text-dark);
+  color: var(--white);
+  padding: 2rem 5%;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+/* Mengubah footer menjadi grid 3 kolom pada desktop (Meskipun konten HTML saat ini sedikit) */
+@media (min-width: 768px) {
+  footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    text-align: left;
+  }
+
+  footer p {
+    grid-column: 2; /* Menempatkan teks hak cipta di tengah-tengah 3 kolom */
+    text-align: center;
+    color: #a0a0a0;
+  }
+}

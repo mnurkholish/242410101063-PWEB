@@ -6,36 +6,40 @@
     <title>PitStop</title>
     <link
       rel="icon"
-      href="favicon-dark.ico"
+      href="img/favicon-dark.ico"
       media="(prefers-color-scheme: dark)"
     />
     <link
       rel="icon"
-      href="favicon-light.ico"
+      href="img/favicon-light.ico"
       media="(prefers-color-scheme: light)"
     />
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
 
   <body>
-    <header>
+    <header class="navbar">
       <div class="logo">
-        <img src="pitstop-logo.png" alt="Logo PitStop" height="100px" />
-        <h1>PitStop - Sistem Antrean Cerdas & Booking Bengkel</h1>
+        <div class="logo-icon"></div>
+        <h1>PitStop</h1>
       </div>
-      <div class="user-info">
-        <span>Halo, <strong>Pelanggan</strong></span>
-      </div>
-    </header>
 
-    <!-- 2. Navbar -->
-    <nav>
-      <ul>
-        <li><a href="#">Beranda</a></li>
-        <li><a href="#">Booking</a></li>
-        <li><a href="#">Riwayat Antrean</a></li>
-        <li><a href="#">Profil</a></li>
-      </ul>
-    </nav>
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="hamburger">&#9776;</label>
+
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#">Beranda</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Riwayat</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="#" class="btn-login">Login</a>
+          <a href="#" class="btn-register">Register</a>
+        </div>
+      </nav>
+    </header>
 
     <div class="container">
       <!-- 5. Sidebar dengan statistik sederhana -->
@@ -63,7 +67,7 @@
         <!-- 3. Form Input -->
         <section class="card">
           <h2>Form Booking Jadwal</h2>
-          <form>
+          <form action="#" method="POST">
             <div class="form-group">
               <label for="nama">Nama Lengkap</label>
               <input
@@ -126,7 +130,7 @@
         <!-- Tabel Antrean -->
         <section class="card">
           <h2>Daftar Antrean Saat Ini</h2>
-          <table border="1">
+          <table>
             <thead>
               <tr>
                 <th>No</th>
