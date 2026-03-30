@@ -1,9 +1,9 @@
-/* ==========================================================================
-   1. VARIABEL & RESET (Tema disesuaikan dengan referensi gambar)
-   ========================================================================== */
+/* VARIABEL & RESET */
+
 :root {
-  --primary: #5b58ff; /* Warna ungu-biru utama dari gambar */
+  --primary: #5b58ff; /* Biru */
   --primary-hover: #4845d4;
+  --primary-darker: #201f59;
   --secondary: #7874ff;
   --bg-color: #f4f7ff;
   --text-dark: #2b2b2b;
@@ -17,11 +17,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family:
-    "Segoe UI",
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: "Segoe UI";
 }
 
 body {
@@ -31,9 +27,7 @@ body {
   line-height: 1.6;
 }
 
-/* ==========================================================================
-   2. NAVBAR & HEADER (Flexbox, Mobile-First)
-   ========================================================================== */
+/* NAVBAR & HEADER */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -46,7 +40,7 @@ body {
   z-index: 1000;
 }
 
-/* Styling Logo */
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -54,22 +48,23 @@ body {
 }
 
 .logo-icon {
-  width: 24px;
-  height: 24px;
-  background-color: var(--primary);
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
   border-radius: 4px;
 }
 
 .logo h1 {
+  font-family: monospace;
   font-size: 1.4rem;
-  color: #1a1a4b; /* Warna teks logo yang lebih gelap seperti di gambar */
-  font-weight: 800;
+  color: var(--text-dark);
+  font-weight: 700;
   letter-spacing: 1px;
 }
 
-/* --- MOBILE FIRST: Tampilan default disembunyikan dan vertikal --- */
+/* MOBILE */
 .nav-menu {
-  display: none; /* Disembunyikan di mobile sampai hamburger diklik */
+  display: none;
   flex-direction: column;
   position: absolute;
   top: 100%;
@@ -106,7 +101,7 @@ body {
   gap: 1rem;
 }
 
-/* Styling Login (mirip teks "Contact") */
+/* Styling Login */
 .btn-login {
   text-decoration: none;
   color: var(--text-dark);
@@ -119,7 +114,7 @@ body {
   color: var(--primary);
 }
 
-/* Styling Register (mirip tombol "Get Started") */
+/* Styling Register */
 .btn-register {
   background: var(--primary);
   color: var(--white);
@@ -137,7 +132,7 @@ body {
   box-shadow: 0 6px 15px rgba(91, 88, 255, 0.3);
 }
 
-/* --- LOGIKA HAMBURGER MENU (CSS Only) --- */
+/* HAMBURGER MENU */
 .menu-toggle {
   display: none;
 }
@@ -145,37 +140,36 @@ body {
 .hamburger {
   font-size: 1.8rem;
   cursor: pointer;
-  display: block; /* Muncul di layar kecil */
+  display: block;
   color: var(--text-dark);
 }
 
-/* Jika checkbox dicentang (hamburger diklik), tampilkan menu */
 .menu-toggle:checked ~ .nav-menu {
   display: flex;
 }
 
-/* --- DESKTOP VIEW: Menyesuaikan tata letak gambar --- */
+/* DESKTOP VIEW */
 @media (min-width: 992px) {
   .hamburger {
-    display: none; /* Sembunyikan hamburger di desktop */
+    display: none;
   }
 
   .nav-menu {
     display: flex;
     flex-direction: row;
-    position: static; /* Kembali ke aliran normal dokumen */
+    position: static;
     width: auto;
     padding: 0;
     box-shadow: none;
     align-items: center;
     flex-grow: 1;
-    justify-content: space-between; /* Memisahkan link tengah dan tombol kanan */
+    justify-content: space-between;
   }
 
   .nav-links {
     flex-direction: row;
     gap: 2.5rem;
-    margin: 0 auto; /* Memaksa link berada tepat di tengah */
+    margin: 0 auto;
   }
 
   .nav-actions {
@@ -185,9 +179,7 @@ body {
   }
 }
 
-/* ==========================================================================
-   3. LAYOUT UTAMA & SIDEBAR STATISTIK (Mobile-First)
-   ========================================================================== */
+/*  LAYOUT & SIDEBAR */
 .container {
   display: flex;
   flex-direction: column; /* Mobile: Statistik dan Main content bertumpuk vertikal */
@@ -197,19 +189,16 @@ body {
   margin: 0 auto;
 }
 
-/* --- Tampilan Mobile: Shrink/Mengecil --- */
+/* Tampilan Mobile */
 aside {
   display: grid;
-  grid-template-columns: repeat(
-    2,
-    1fr
-  ); /* Mobile: Dibagi 2 kolom kecil agar rapi dan tidak makan tempat */
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   width: 100%;
 }
 
 aside h3 {
-  grid-column: 1 / -1; /* Memastikan judul tetap membentang penuh di atas kartu */
+  grid-column: 1 / -1;
   color: var(--primary);
   border-bottom: 2px solid var(--primary);
   padding-bottom: 0.5rem;
@@ -218,7 +207,7 @@ aside h3 {
 
 .stat-card {
   background: var(--white);
-  padding: 1rem; /* Padding diperkecil agar pas di mobile */
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
   border-left: 5px solid var(--primary);
@@ -244,29 +233,27 @@ aside h3 {
   color: var(--text-dark);
 }
 
-/* --- Tampilan Desktop: Sidebar di Kiri --- */
+/* Tampilan Desktop */
 @media (min-width: 992px) {
   .container {
     display: grid;
-    grid-template-columns: 280px 1fr; /* Membagi layar: Kiri 280px (Sidebar), Kanan sisanya (Main Content) */
-    align-items: start; /* Mencegah sidebar tertarik panjang mengikuti isi tabel di kanannya */
+    grid-template-columns: 280px 1fr;
+    align-items: start;
   }
 
   aside {
-    display: flex; /* Mengubah kembali menjadi flexbox untuk menyusun kartu ke bawah */
+    display: flex;
     flex-direction: column;
-    position: sticky; /* Efek keren: Sidebar akan berhenti/mengambang saat Anda scroll ke bawah */
+    position: sticky;
     top: 100px;
   }
 
   .stat-card {
-    padding: 1.5rem; /* Mengembalikan ukuran padding normal di desktop */
+    padding: 1.5rem;
   }
 }
 
-/* ==========================================================================
-   4. FORM PENCARIAN & INPUT (Styling lengkap & Focus Effect)
-   ========================================================================== */
+/* FORM PENCARIAN & INPUT  */
 main {
   display: flex;
   flex-direction: column;
@@ -306,7 +293,7 @@ main {
   border-radius: 8px;
   font-size: 1rem;
   background-color: #fafbfa;
-  transition: var(--transition); /* Animasi 2 */
+  transition: var(--transition);
 }
 
 /* Focus Effect pada Form */
@@ -324,7 +311,7 @@ button[type="submit"] {
   border: none;
   padding: 0.8rem 2.5rem;
   font-size: 1rem;
-  border-radius: 50px; /* Bentuk Pill seperti referensi gambar */
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
   transition: var(--transition);
@@ -340,13 +327,11 @@ button[type="submit"]:hover {
 
 @media (min-width: 768px) {
   button[type="submit"] {
-    width: auto; /* Button menyesuaikan konten di desktop */
+    width: auto;
   }
 }
 
-/* ==========================================================================
-   5. TABEL DAFTAR DATA (Zebra striping, padding)
-   ========================================================================== */
+/* TABEL DAFTAR DATA */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -408,22 +393,20 @@ tbody tr:hover {
   }
 }
 
-/* ==========================================================================
-   6. FOOTER (Responsif 3 Kolom - Disiapkan untuk masa depan)
-   ========================================================================== */
+/* 6. FOOTER */
+
 hr {
-  display: none; /* Disembunyikan karena styling footer sudah memiliki background */
+  display: none;
 }
 
 footer {
-  background: var(--text-dark);
+  background: var(--primary-darker);
   color: var(--white);
   padding: 2rem 5%;
   margin-top: 3rem;
   text-align: center;
 }
 
-/* Mengubah footer menjadi grid 3 kolom pada desktop (Meskipun konten HTML saat ini sedikit) */
 @media (min-width: 768px) {
   footer {
     display: grid;
@@ -433,15 +416,13 @@ footer {
   }
 
   footer p {
-    grid-column: 2; /* Menempatkan teks hak cipta di tengah-tengah 3 kolom */
+    grid-column: 2;
     text-align: center;
     color: #a0a0a0;
   }
 }
 
-/* ==========================================================================
-   - HERO SECTION (Gradient Overlay & Center Content)
-   ========================================================================== */
+/* HERO SECTION */
 .hero {
   /* Gradient linear dipadukan untuk memberikan efek overlay yang rapi */
   background:
@@ -452,7 +433,7 @@ footer {
     ),
     url("https://images.unsplash.com/photo-1613214149922-f1809c99b414?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")
       center/cover no-repeat;
-  min-height: 95vh; /* Mengisi 70% tinggi layar saat pertama dibuka */
+  min-height: 95vh; /* Mengisi 50% tinggi layar saat pertama dibuka */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -463,7 +444,7 @@ footer {
 
 .hero-content {
   max-width: 800px;
-  animation: fadeIn 1s ease-in-out; /* Tambahan animasi halus */
+  animation: fadeIn 1s ease-in-out;
 }
 
 .hero-content h2 {
