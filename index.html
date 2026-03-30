@@ -1,20 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PitStop</title>
-    <link
-      rel="icon"
-      href="img/favicon-dark.ico"
-      media="(prefers-color-scheme: dark)"
-    />
-    <link
-      rel="icon"
-      href="img/favicon-light.ico"
-      media="(prefers-color-scheme: light)"
-    />
-    <link rel="stylesheet" href="/css/style.css" />
+    <title>PitStop - Sistem Antrean & Booking Bengkel</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
@@ -30,41 +20,59 @@
       <nav class="nav-menu">
         <ul class="nav-links">
           <li><a href="#">Beranda</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Riwayat</a></li>
-          <li><a href="#">Pricing</a></li>
+          <li><a href="#booking-section">Booking Servis</a></li>
+          <li><a href="#antrean-section">Cek Antrean</a></li>
+          <li><a href="#">Layanan Kami</a></li>
         </ul>
         <div class="nav-actions">
           <a href="#" class="btn-login">Login</a>
-          <a href="#" class="btn-register">Register</a>
+          <a href="#" class="btn-register">Daftar</a>
         </div>
       </nav>
     </header>
 
-    <div class="container">
-      <!-- 5. Sidebar dengan statistik sederhana -->
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Solusi Cerdas Perawatan Kendaraan Anda</h2>
+        <p>
+          Booking jadwal servis tanpa antre panjang, pantau status pengerjaan
+          secara real-time, dan percayakan kendaraan Anda pada mekanik ahli
+          kami.
+        </p>
+        <a href="#booking-section" class="btn-cta">Booking Sekarang</a>
+      </div>
+    </section>
+
+    <div class="container" id="booking-section">
       <aside>
-        <h3>Statistik Hari Ini</h3>
+        <h3>Kondisi Bengkel</h3>
         <div class="stat-card">
-          <h4>Total Booking</h4>
-          <p>12</p>
+          <h4>Kapasitas Tersedia</h4>
+          <p>
+            8 <span style="font-size: 1rem; font-weight: normal">Slot</span>
+          </p>
         </div>
         <div class="stat-card">
           <h4>Menunggu</h4>
-          <p>5</p>
+          <p>
+            5 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
+          </p>
         </div>
         <div class="stat-card">
-          <h4>Sedang Dikerjakan</h4>
-          <p>3</p>
+          <h4>Sedang Servis</h4>
+          <p>
+            3 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
+          </p>
         </div>
         <div class="stat-card">
-          <h4>Selesai</h4>
-          <p>4</p>
+          <h4>Selesai Hari Ini</h4>
+          <p>
+            12 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
+          </p>
         </div>
       </aside>
 
       <main>
-        <!-- 3. Form Input -->
         <section class="card">
           <h2>Form Booking Jadwal</h2>
           <form action="#" method="POST">
@@ -84,7 +92,7 @@
                 type="text"
                 id="plat"
                 name="plat"
-                placeholder="B 1234 XYZ"
+                placeholder="Contoh: B 1234 XYZ"
                 required
               />
             </div>
@@ -92,16 +100,18 @@
               <label for="jenis_servis">Jenis Servis</label>
               <select id="jenis_servis" name="jenis_servis" required>
                 <option value="">Pilih Servis...</option>
-                <option value="ganti_oli">Ganti Oli (30 Menit)</option>
+                <option value="ganti_oli">Ganti Oli (Estimasi 30 Menit)</option>
                 <option value="servis_berkala">
-                  Servis Berkala (120 Menit)
+                  Servis Berkala (Estimasi 120 Menit)
                 </option>
-                <option value="rem">Perbaikan Rem (60 Menit)</option>
-                <option value="diagnosa">Diagnosa Mesin (45 Menit)</option>
+                <option value="rem">Perbaikan Rem (Estimasi 60 Menit)</option>
+                <option value="diagnosa">
+                  Diagnosa Mesin Komputer (Estimasi 45 Menit)
+                </option>
               </select>
             </div>
             <div class="form-group">
-              <label for="tanggal">Tanggal</label>
+              <label for="tanggal">Tanggal Kedatangan</label>
               <input type="date" id="tanggal" name="tanggal" required />
             </div>
             <div class="form-group">
@@ -115,72 +125,60 @@
                 required
               />
             </div>
-            <div class="form-group">
-              <label for="mekanik">Pilih Mekanik (Opsional)</label>
-              <select id="mekanik" name="mekanik">
-                <option value="default">Sistem yang Menentukan</option>
-                <option value="mekanik_1">Budi (Ahli Mesin)</option>
-                <option value="mekanik_2">Andi (Ahli Kelistrikan)</option>
-              </select>
-            </div>
-            <button type="submit">Booking Sekarang</button>
+            <button type="submit">Konfirmasi Booking</button>
           </form>
         </section>
 
-        <!-- Tabel Antrean -->
-        <section class="card">
-          <h2>Daftar Antrean Saat Ini</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kendaraan</th>
-                <th>Servis</th>
-                <th>Jadwal</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Kholish Nur</td>
-                <td>B 1234 XYZ</td>
-                <td>Ganti Oli</td>
-                <td>09:00 - 09:30</td>
-                <td>
-                  <span class="status-badge status-processing">Dikerjakan</span>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Siti Aminah</td>
-                <td>D 5678 ABC</td>
-                <td>Servis Berkala</td>
-                <td>10:00 - 12:00</td>
-                <td>
-                  <span class="status-badge status-pending">Menunggu</span>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Budi Santoso</td>
-                <td>F 9012 IJ</td>
-                <td>Perbaikan Rem</td>
-                <td>13:00 - 14:00</td>
-                <td>
-                  <span class="status-badge status-pending">Menunggu</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <section class="card" id="antrean-section">
+          <h2>Antrean Live Saat Ini</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Plat</th>
+                  <th>Servis</th>
+                  <th>Waktu</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>B 1234 XYZ</td>
+                  <td>Ganti Oli</td>
+                  <td>09:00</td>
+                  <td>
+                    <span class="status-badge status-processing"
+                      >Dikerjakan</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>D 5678 ABC</td>
+                  <td>Servis Berkala</td>
+                  <td>10:00</td>
+                  <td>
+                    <span class="status-badge status-pending">Menunggu</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>F 9012 IJ</td>
+                  <td>Perbaikan Rem</td>
+                  <td>13:00</td>
+                  <td>
+                    <span class="status-badge status-pending">Menunggu</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
     </div>
 
-    <hr />
-
-    <!-- Footer -->
     <footer>
       <p>&copy; 2026 PitStop - Sistem Antrean Cerdas Bengkel.</p>
     </footer>
