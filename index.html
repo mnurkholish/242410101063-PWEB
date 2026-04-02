@@ -14,7 +14,7 @@
       href="img/favicon-light.ico"
       media="(prefers-color-scheme: light)"
     />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -141,49 +141,65 @@
 
         <section class="card" id="antrean-section">
           <h2>Antrean Live Saat Ini</h2>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Plat</th>
-                  <th>Servis</th>
-                  <th>Waktu</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>B 1234 XYZ</td>
-                  <td>Ganti Oli</td>
-                  <td>09:00</td>
-                  <td>
-                    <span class="status-badge status-processing"
-                      >Dikerjakan</span
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>D 5678 ABC</td>
-                  <td>Servis Berkala</td>
-                  <td>10:00</td>
-                  <td>
-                    <span class="status-badge status-pending">Menunggu</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>F 9012 IJ</td>
-                  <td>Perbaikan Rem</td>
-                  <td>13:00</td>
-                  <td>
-                    <span class="status-badge status-pending">Menunggu</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+          <div class="css-filter-wrapper">
+            <input type="radio" name="antreanFilter" id="filter-all" checked />
+            <input type="radio" name="antreanFilter" id="filter-dikerjakan" />
+            <input type="radio" name="antreanFilter" id="filter-menunggu" />
+
+            <div class="filter-controls">
+              <span class="filter-label">Filter Status:</span>
+              <label for="filter-all" class="filter-btn">Semua</label>
+              <label for="filter-dikerjakan" class="filter-btn"
+                >Dikerjakan</label
+              >
+              <label for="filter-menunggu" class="filter-btn">Menunggu</label>
+            </div>
+
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Plat</th>
+                    <th>Servis</th>
+                    <th>Waktu</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody class="filter-target">
+                  <tr class="row-dikerjakan">
+                    <td>1</td>
+                    <td>B 1234 XYZ</td>
+                    <td>Ganti Oli</td>
+                    <td>09:00</td>
+                    <td>
+                      <span class="status-badge status-processing"
+                        >Dikerjakan</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="row-menunggu">
+                    <td>2</td>
+                    <td>D 5678 ABC</td>
+                    <td>Servis Berkala</td>
+                    <td>10:00</td>
+                    <td>
+                      <span class="status-badge status-pending">Menunggu</span>
+                    </td>
+                  </tr>
+                  <tr class="row-menunggu">
+                    <td>3</td>
+                    <td>F 9012 IJ</td>
+                    <td>Perbaikan Rem</td>
+                    <td>13:00</td>
+                    <td>
+                      <span class="status-badge status-pending">Menunggu</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       </main>
