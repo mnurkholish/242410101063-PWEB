@@ -416,30 +416,30 @@ const renderTable = () => {
     .map(
       (booking) => `
         <tr>
-          <td><strong>${booking.kodeBooking}</strong></td>
-          <td>
+          <td data-label="Kode"><strong>${booking.kodeBooking}</strong></td>
+          <td data-label="Pelanggan">
             ${booking.namaPelanggan}
             <div class="muted">${booking.nomorPlat}</div>
           </td>
-          <td>
+          <td data-label="Kendaraan">
             ${booking.jenisKendaraan}
             <div class="muted">${booking.merekKendaraan}</div>
           </td>
-          <td>
+          <td data-label="Service">
             ${booking.jenisService.join(", ")}
             <div class="muted">${formatDuration(booking.estimasiDurasi)}</div>
           </td>
-          <td>
+          <td data-label="Jadwal">
             ${formatDate(booking.tanggalService)}
             <div class="muted">${booking.jamService} WIB</div>
           </td>
-          <td>${formatCurrency(booking.estimasiBiaya)}</td>
-          <td>
+          <td data-label="Biaya">${formatCurrency(booking.estimasiBiaya)}</td>
+          <td data-label="Status">
             <span class="status-badge status-${booking.statusBooking.toLowerCase()}">
               ${booking.statusBooking}
             </span>
           </td>
-          <td>
+          <td data-label="Aksi">
             <div class="action-group">
               <button class="btn-action btn-edit" data-action="edit" data-id="${booking.id}">Edit</button>
               <button class="btn-action btn-status" data-action="status" data-id="${booking.id}">Status</button>
