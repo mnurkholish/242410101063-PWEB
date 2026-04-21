@@ -1,6 +1,6 @@
 const STORAGE_KEY = "pitstopBookings";
 
-const serviceCatalog = {
+const services = {
   "Ganti Oli": { price: 350000, duration: 30 },
   "Servis Berkala": { price: 850000, duration: 120 },
   "Perbaikan Rem": { price: 275000, duration: 60 },
@@ -9,19 +9,9 @@ const serviceCatalog = {
   "Diagnosa Mesin": { price: 250000, duration: 45 },
 };
 
-const statusFlow = ["Menunggu", "Diproses", "Selesai"];
-
-const createId = () => {
-  if (window.crypto && typeof window.crypto.randomUUID === "function") {
-    return window.crypto.randomUUID();
-  }
-
-  return `booking-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-};
-
-const initialBookings = [
+const defaultBookings = [
   {
-    id: createId(),
+    id: "booking-1",
     kodeBooking: "PS-001",
     namaPelanggan: "Budi Santoso",
     nomorPlat: "B 1234 XYZ",
@@ -35,7 +25,7 @@ const initialBookings = [
     statusBooking: "Diproses",
   },
   {
-    id: createId(),
+    id: "booking-2",
     kodeBooking: "PS-002",
     namaPelanggan: "Siti Aminah",
     nomorPlat: "D 5678 ABC",
@@ -49,7 +39,7 @@ const initialBookings = [
     statusBooking: "Menunggu",
   },
   {
-    id: createId(),
+    id: "booking-3",
     kodeBooking: "PS-003",
     namaPelanggan: "Raka Pratama",
     nomorPlat: "F 9012 IJ",
@@ -66,24 +56,20 @@ const initialBookings = [
 
 let bookings = [];
 
-const bookingForm = document.querySelector("#bookingForm");
-const bookingTableBody = document.querySelector("#bookingTableBody");
+const form = document.querySelector("#bookingForm");
+const tableBody = document.querySelector("#bookingTableBody");
 const emptyState = document.querySelector("#emptyState");
-const searchInput = document.querySelector("#searchInput");
-const filterService = document.querySelector("#filterService");
-const filterStatus = document.querySelector("#filterStatus");
 const submitButton = document.querySelector("#submitButton");
 const resetButton = document.querySelector("#resetButton");
 const cancelEditButton = document.querySelector("#cancelEditButton");
+const searchInput = document.querySelector("#searchInput");
+const filterService = document.querySelector("#filterService");
+const filterStatus = document.querySelector("#filterStatus");
 const formTitle = document.querySelector("#formTitle");
 const formModeLabel = document.querySelector("#formModeLabel");
 const formFeedback = document.querySelector("#formFeedback");
 const serviceGroup = document.querySelector("#serviceGroup");
-const kodePreview = document.querySelector("#kodePreview");
-const estimasiPreview = document.querySelector("#estimasiPreview");
-const durasiPreview = document.querySelector("#durasiPreview");
-const statusPreview = document.querySelector("#statusPreview");
-const serviceInputs = document.querySelectorAll('input[name="jenisService"]');
+const serviceInputs = [...document.querySelectorAll('input[name="jenisService"]')];
 
 const fields = {
   bookingId: document.querySelector("#bookingId"),
@@ -95,6 +81,23 @@ const fields = {
   jamService: document.querySelector("#jamService"),
 };
 
+const errors = {
+  namaPelanggan: document.querySelector("#namaPelangganError"),
+  nomorPlat: document.querySelector("#nomorPlatError"),
+  jenisKendaraan: document.querySelector("#jenisKendaraanError"),
+  merekKendaraan: document.querySelector("#merekKendaraanError"),
+  tanggalService: document.querySelector("#tanggalServiceError"),
+  jamService: document.querySelector("#jamServiceError"),
+  jenisService: document.querySelector("#jenisServiceError"),
+};
+
+const previews = {
+  kode: document.querySelector("#kodePreview"),
+  biaya: document.querySelector("#estimasiPreview"),
+  durasi: document.querySelector("#durasiPreview"),
+  status: document.querySelector("#statusPreview"),
+};
+
 const stats = {
   totalBooking: document.querySelector("#totalBooking"),
   totalEstimasi: document.querySelector("#totalEstimasi"),
@@ -102,26 +105,14 @@ const stats = {
   totalSelesai: document.querySelector("#totalSelesai"),
 };
 
-const saveBookings = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
-};
-
-const showFeedback = (message, type = "success") => {
-  formFeedback.textContent = message;
-  formFeedback.className = `form-feedback show ${type}`;
-};
-
-const clearFeedback = () => {
-  formFeedback.textContent = "";
-  formFeedback.className = "form-feedback";
-};
+const createId = () => `booking-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(Number(value) || 0);
 
 const formatDate = (value) =>
   new Intl.DateTimeFormat("id-ID", {
@@ -131,99 +122,133 @@ const formatDate = (value) =>
   }).format(new Date(`${value}T00:00:00`));
 
 const formatDuration = (minutes) => {
-  if (minutes < 60) {
-    return `${minutes} menit`;
+  const value = Number(minutes) || 0;
+
+  if (value < 60) {
+    return `${value} menit`;
   }
 
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
+  const hours = Math.floor(value / 60);
+  const rest = value % 60;
 
-  return remainingMinutes
-    ? `${hours} jam ${remainingMinutes} menit`
-    : `${hours} jam`;
+  return rest ? `${hours} jam ${rest} menit` : `${hours} jam`;
 };
 
-const normalizeText = (value) => value.trim().toLowerCase();
-
-const getTodayInputValue = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const date = String(today.getDate()).padStart(2, "0");
+const getTodayValue = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const date = String(now.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${date}`;
 };
 
 const getSelectedServices = () =>
-  [...serviceInputs]
-    .filter((input) => input.checked)
-    .map((input) => input.value);
+  serviceInputs.filter((input) => input.checked).map((input) => input.value);
 
-const calculateServiceSummary = (selectedServices) =>
+const calculateSummary = (selectedServices) =>
   selectedServices.reduce(
-    (summary, serviceName) => {
-      const service = serviceCatalog[serviceName];
-
-      if (!service) {
-        return summary;
-      }
-
-      return {
-        price: summary.price + service.price,
-        duration: summary.duration + service.duration,
-      };
-    },
+    (summary, serviceName) => ({
+      price: summary.price + services[serviceName].price,
+      duration: summary.duration + services[serviceName].duration,
+    }),
     { price: 0, duration: 0 },
   );
 
-const getNextBookingCode = () => {
-  const biggestNumber = bookings.reduce((biggest, booking) => {
-    const codeNumber = Number(String(booking.kodeBooking || "").replace(/\D/g, ""));
-    return Number.isNaN(codeNumber) ? biggest : Math.max(biggest, codeNumber);
-  }, 0);
-
-  return `PS-${String(biggestNumber + 1).padStart(3, "0")}`;
+const saveToStorage = () => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
 };
 
-const setError = (fieldName, message = "") => {
+const loadFromStorage = () => {
+  const storedData = localStorage.getItem(STORAGE_KEY);
+
+  if (!storedData) {
+    bookings = [...defaultBookings];
+    saveToStorage();
+    return;
+  }
+
+  try {
+    const parsedData = JSON.parse(storedData);
+    bookings = Array.isArray(parsedData) ? parsedData.map(normalizeBooking) : [...defaultBookings];
+  } catch (error) {
+    bookings = [...defaultBookings];
+    saveToStorage();
+  }
+};
+
+const normalizeBooking = (booking, index) => {
+  const selectedServices = Array.isArray(booking.jenisService)
+    ? booking.jenisService.filter((serviceName) => services[serviceName])
+    : [booking.jenisService].filter((serviceName) => services[serviceName]);
+  const summary = calculateSummary(selectedServices);
+
+  return {
+    id: booking.id || createId(),
+    kodeBooking: booking.kodeBooking || `PS-${String(index + 1).padStart(3, "0")}`,
+    namaPelanggan: booking.namaPelanggan || "",
+    nomorPlat: booking.nomorPlat || "",
+    jenisKendaraan: booking.jenisKendaraan || "",
+    merekKendaraan: booking.merekKendaraan || "",
+    jenisService: selectedServices,
+    tanggalService: booking.tanggalService || getTodayValue(),
+    jamService: booking.jamService || "08:00",
+    estimasiBiaya: summary.price || Number(booking.estimasiBiaya) || 0,
+    estimasiDurasi: summary.duration || Number(booking.estimasiDurasi) || 0,
+    statusBooking: booking.statusBooking || "Menunggu",
+  };
+};
+
+const showFeedback = (message, type) => {
+  formFeedback.textContent = message;
+  formFeedback.className = `form-feedback show ${type}`;
+};
+
+const clearFeedback = () => {
+  formFeedback.textContent = "";
+  formFeedback.className = "form-feedback";
+};
+
+const setFieldError = (fieldName, message = "") => {
+  errors[fieldName].textContent = message;
+
   if (fieldName === "jenisService") {
     serviceGroup.classList.toggle("invalid", Boolean(message));
-    document.querySelector("#jenisServiceError").textContent = message;
     return;
   }
 
-  const input = fields[fieldName];
-  if (!input) {
-    return;
-  }
-
-  const formGroup = input.closest(".form-group");
-  const errorLabel = document.querySelector(`#${fieldName}Error`);
-
-  formGroup.classList.toggle("invalid", Boolean(message));
-  if (errorLabel) {
-    errorLabel.textContent = message;
-  }
+  fields[fieldName].closest(".form-group").classList.toggle("invalid", Boolean(message));
 };
 
-const clearErrors = () => {
-  Object.keys(fields).forEach((fieldName) => setError(fieldName));
-  setError("jenisService");
+const clearValidation = () => {
+  Object.keys(errors).forEach((fieldName) => setFieldError(fieldName));
+};
+
+const getBookingCode = () => {
+  const editedBooking = bookings.find((booking) => booking.id === fields.bookingId.value);
+
+  if (editedBooking) {
+    return editedBooking.kodeBooking;
+  }
+
+  const latestNumber = bookings.reduce((latest, booking) => {
+    const number = Number(String(booking.kodeBooking).replace(/\D/g, ""));
+    return Number.isNaN(number) ? latest : Math.max(latest, number);
+  }, 0);
+
+  return `PS-${String(latestNumber + 1).padStart(3, "0")}`;
 };
 
 const getDateTime = (date, time) => new Date(`${date}T${time}:00`);
 
-const getEndTime = (booking) => {
-  const startTime = getDateTime(booking.tanggalService, booking.jamService);
-  return new Date(startTime.getTime() + booking.estimasiDurasi * 60000);
+const getBookingEndTime = (booking) => {
+  const start = getDateTime(booking.tanggalService, booking.jamService);
+  return new Date(start.getTime() + booking.estimasiDurasi * 60000);
 };
 
-const hasScheduleConflict = (candidate) => {
-  const candidateStart = getDateTime(
-    candidate.tanggalService,
-    candidate.jamService,
-  );
-  const candidateEnd = getEndTime(candidate);
+const hasConflict = (candidate) => {
+  const candidateStart = getDateTime(candidate.tanggalService, candidate.jamService);
+  const candidateEnd = getBookingEndTime(candidate);
 
   return bookings.some((booking) => {
     if (
@@ -234,11 +259,8 @@ const hasScheduleConflict = (candidate) => {
       return false;
     }
 
-    const existingStart = getDateTime(
-      booking.tanggalService,
-      booking.jamService,
-    );
-    const existingEnd = getEndTime(booking);
+    const existingStart = getDateTime(booking.tanggalService, booking.jamService);
+    const existingEnd = getBookingEndTime(booking);
 
     return candidateStart < existingEnd && candidateEnd > existingStart;
   });
@@ -246,14 +268,12 @@ const hasScheduleConflict = (candidate) => {
 
 const getFormData = () => {
   const selectedServices = getSelectedServices();
-  const serviceSummary = calculateServiceSummary(selectedServices);
-  const existingBooking = bookings.find(
-    (booking) => booking.id === fields.bookingId.value,
-  );
+  const summary = calculateSummary(selectedServices);
+  const editedBooking = bookings.find((booking) => booking.id === fields.bookingId.value);
 
   return {
     id: fields.bookingId.value || createId(),
-    kodeBooking: existingBooking?.kodeBooking || getNextBookingCode(),
+    kodeBooking: getBookingCode(),
     namaPelanggan: fields.namaPelanggan.value.trim(),
     nomorPlat: fields.nomorPlat.value.trim().toUpperCase(),
     jenisKendaraan: fields.jenisKendaraan.value,
@@ -261,98 +281,113 @@ const getFormData = () => {
     jenisService: selectedServices,
     tanggalService: fields.tanggalService.value,
     jamService: fields.jamService.value,
-    estimasiBiaya: serviceSummary.price,
-    estimasiDurasi: serviceSummary.duration,
-    statusBooking: existingBooking?.statusBooking || "Menunggu",
+    estimasiBiaya: summary.price,
+    estimasiDurasi: summary.duration,
+    statusBooking: editedBooking?.statusBooking || "Menunggu",
   };
 };
 
 const validateBooking = (booking) => {
-  clearErrors();
+  clearValidation();
   clearFeedback();
 
-  const errors = {};
+  const validationErrors = {};
   const selectedDateTime =
     booking.tanggalService && booking.jamService
       ? getDateTime(booking.tanggalService, booking.jamService)
       : null;
-  const serviceEndTime =
-    selectedDateTime && booking.estimasiDurasi
-      ? getEndTime(booking)
-      : null;
   const closingTime = booking.tanggalService
     ? getDateTime(booking.tanggalService, "17:00")
     : null;
+  const endTime = selectedDateTime && booking.estimasiDurasi
+    ? getBookingEndTime(booking)
+    : null;
 
   if (!booking.namaPelanggan) {
-    errors.namaPelanggan = "Nama pelanggan wajib diisi.";
+    validationErrors.namaPelanggan = "Nama pelanggan wajib diisi.";
   } else if (booking.namaPelanggan.length < 3) {
-    errors.namaPelanggan = "Nama minimal 3 karakter.";
+    validationErrors.namaPelanggan = "Nama minimal 3 karakter.";
   }
 
   if (!booking.nomorPlat) {
-    errors.nomorPlat = "Nomor plat wajib diisi.";
+    validationErrors.nomorPlat = "Nomor plat wajib diisi.";
   } else if (!/^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{1,3}$/.test(booking.nomorPlat)) {
-    errors.nomorPlat = "Format plat belum sesuai. Contoh: B 1234 XYZ.";
+    validationErrors.nomorPlat = "Format plat harus seperti B 1234 XYZ.";
   }
 
   if (!booking.jenisKendaraan) {
-    errors.jenisKendaraan = "Jenis kendaraan wajib dipilih.";
+    validationErrors.jenisKendaraan = "Jenis kendaraan wajib dipilih.";
   }
 
   if (!booking.merekKendaraan) {
-    errors.merekKendaraan = "Merek atau seri kendaraan wajib diisi.";
-  } else if (booking.merekKendaraan.length < 3) {
-    errors.merekKendaraan = "Merek atau seri minimal 3 karakter.";
-  }
-
-  if (!booking.jenisService.length) {
-    errors.jenisService = "Pilih minimal satu jenis service.";
+    validationErrors.merekKendaraan = "Merek atau seri kendaraan wajib diisi.";
   }
 
   if (!booking.tanggalService) {
-    errors.tanggalService = "Tanggal service wajib diisi.";
+    validationErrors.tanggalService = "Tanggal service wajib diisi.";
   }
 
   if (!booking.jamService) {
-    errors.jamService = "Jam kedatangan wajib diisi.";
+    validationErrors.jamService = "Jam kedatangan wajib diisi.";
   } else if (booking.jamService < "08:00" || booking.jamService > "17:00") {
-    errors.jamService = "Jam service hanya 08:00 sampai 17:00.";
+    validationErrors.jamService = "Jam service hanya 08:00 sampai 17:00.";
+  }
+
+  if (!booking.jenisService.length) {
+    validationErrors.jenisService = "Pilih minimal satu jenis service.";
   }
 
   if (selectedDateTime && selectedDateTime < new Date()) {
-    errors.tanggalService = "Tanggal dan jam tidak boleh di masa lalu.";
-    errors.jamService = "Pilih jam kedatangan yang masih tersedia.";
+    validationErrors.tanggalService = "Tanggal dan jam tidak boleh di masa lalu.";
+    validationErrors.jamService = "Pilih waktu kedatangan yang masih tersedia.";
   }
 
-  if (serviceEndTime && closingTime && serviceEndTime > closingTime) {
-    errors.jamService =
-      "Durasi service melewati jam tutup bengkel. Pilih jam lebih awal.";
+  if (endTime && closingTime && endTime > closingTime) {
+    validationErrors.jamService = "Durasi service melewati jam tutup bengkel.";
   }
 
-  if (booking.tanggalService && booking.jamService && hasScheduleConflict(booking)) {
-    errors.jamService =
-      "Jadwal bentrok dengan booking lain. Silakan pilih jam berbeda.";
+  if (booking.tanggalService && booking.jamService && booking.jenisService.length && hasConflict(booking)) {
+    validationErrors.jamService = "Jadwal bentrok dengan booking lain.";
   }
 
-  Object.entries(errors).forEach(([fieldName, message]) =>
-    setError(fieldName, message),
-  );
+  Object.entries(validationErrors).forEach(([fieldName, message]) => {
+    setFieldError(fieldName, message);
+  });
 
-  if (Object.keys(errors).length) {
-    showFeedback("Periksa kembali data booking yang ditandai.", "error");
-    const firstInvalidField = document.querySelector(".form-group.invalid input, .form-group.invalid select");
-
-    if (firstInvalidField) {
-      firstInvalidField.focus();
-    }
+  if (Object.keys(validationErrors).length) {
+    const firstError = Object.values(validationErrors)[0];
+    showFeedback(`Validasi gagal: ${firstError}`, "error");
+    formFeedback.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
   }
 
-  return Object.keys(errors).length === 0;
+  return true;
+};
+
+const renderPreview = () => {
+  const selectedServices = getSelectedServices();
+  const summary = calculateSummary(selectedServices);
+  const editedBooking = bookings.find((booking) => booking.id === fields.bookingId.value);
+
+  previews.kode.textContent = getBookingCode();
+  previews.biaya.textContent = formatCurrency(summary.price);
+  previews.durasi.textContent = formatDuration(summary.duration);
+  previews.status.textContent = editedBooking?.statusBooking || "Menunggu";
+};
+
+const renderStats = () => {
+  const totalEstimasi = bookings.reduce((total, booking) => total + booking.estimasiBiaya, 0);
+  const totalMenunggu = bookings.filter((booking) => booking.statusBooking === "Menunggu").length;
+  const totalSelesai = bookings.filter((booking) => booking.statusBooking === "Selesai").length;
+
+  stats.totalBooking.textContent = bookings.length;
+  stats.totalEstimasi.textContent = formatCurrency(totalEstimasi);
+  stats.totalMenunggu.textContent = totalMenunggu;
+  stats.totalSelesai.textContent = totalSelesai;
 };
 
 const getFilteredBookings = () => {
-  const keyword = normalizeText(searchInput.value);
+  const keyword = searchInput.value.trim().toLowerCase();
   const selectedService = filterService.value;
   const selectedStatus = filterStatus.value;
 
@@ -366,41 +401,18 @@ const getFilteredBookings = () => {
       .join(" ")
       .toLowerCase();
 
-    const matchesKeyword = searchableText.includes(keyword);
-    const matchesService =
-      selectedService === "Semua" ||
-      booking.jenisService.includes(selectedService);
-    const matchesStatus =
-      selectedStatus === "Semua" || booking.statusBooking === selectedStatus;
+    const matchKeyword = searchableText.includes(keyword);
+    const matchService = selectedService === "Semua" || booking.jenisService.includes(selectedService);
+    const matchStatus = selectedStatus === "Semua" || booking.statusBooking === selectedStatus;
 
-    return matchesKeyword && matchesService && matchesStatus;
+    return matchKeyword && matchService && matchStatus;
   });
 };
 
-const renderStats = () => {
-  const totalEstimasi = bookings.reduce(
-    (total, booking) => total + booking.estimasiBiaya,
-    0,
-  );
-  const totalMenunggu = bookings.filter(
-    (booking) => booking.statusBooking === "Menunggu",
-  ).length;
-  const totalSelesai = bookings.filter(
-    (booking) => booking.statusBooking === "Selesai",
-  ).length;
-
-  stats.totalBooking.textContent = bookings.length;
-  stats.totalEstimasi.textContent = formatCurrency(totalEstimasi);
-  stats.totalMenunggu.textContent = totalMenunggu;
-  stats.totalSelesai.textContent = totalSelesai;
-};
-
-const getStatusClass = (status) => `status-${status.toLowerCase()}`;
-
-const renderBookings = () => {
+const renderTable = () => {
   const filteredBookings = getFilteredBookings();
 
-  bookingTableBody.innerHTML = filteredBookings
+  tableBody.innerHTML = filteredBookings
     .map(
       (booking) => `
         <tr>
@@ -423,21 +435,15 @@ const renderBookings = () => {
           </td>
           <td>${formatCurrency(booking.estimasiBiaya)}</td>
           <td>
-            <span class="status-badge ${getStatusClass(booking.statusBooking)}">
+            <span class="status-badge status-${booking.statusBooking.toLowerCase()}">
               ${booking.statusBooking}
             </span>
           </td>
           <td>
             <div class="action-group">
-              <button class="btn-action btn-edit" data-action="edit" data-id="${booking.id}">
-                Edit
-              </button>
-              <button class="btn-action btn-status" data-action="status" data-id="${booking.id}">
-                Status
-              </button>
-              <button class="btn-action btn-delete" data-action="delete" data-id="${booking.id}">
-                Hapus
-              </button>
+              <button class="btn-action btn-edit" data-action="edit" data-id="${booking.id}">Edit</button>
+              <button class="btn-action btn-status" data-action="status" data-id="${booking.id}">Status</button>
+              <button class="btn-action btn-delete" data-action="delete" data-id="${booking.id}">Hapus</button>
             </div>
           </td>
         </tr>
@@ -446,43 +452,57 @@ const renderBookings = () => {
     .join("");
 
   emptyState.textContent = bookings.length
-    ? "Data tidak ditemukan. Coba ubah kata kunci atau filter."
+    ? "Data tidak ditemukan. Coba ubah pencarian atau filter."
     : "Belum ada data booking.";
   emptyState.classList.toggle("show", filteredBookings.length === 0);
 };
 
-const renderSystemPreview = () => {
-  const selectedServices = getSelectedServices();
-  const serviceSummary = calculateServiceSummary(selectedServices);
-  const existingBooking = bookings.find(
-    (booking) => booking.id === fields.bookingId.value,
-  );
-
-  kodePreview.textContent = existingBooking?.kodeBooking || getNextBookingCode();
-  estimasiPreview.textContent = formatCurrency(serviceSummary.price);
-  durasiPreview.textContent = formatDuration(serviceSummary.duration);
-  statusPreview.textContent = existingBooking?.statusBooking || "Menunggu";
-};
-
 const renderApp = () => {
   renderStats();
-  renderBookings();
-  renderSystemPreview();
+  renderPreview();
+  renderTable();
 };
 
 const resetForm = () => {
-  bookingForm.reset();
+  form.reset();
   fields.bookingId.value = "";
-  clearErrors();
-  clearFeedback();
   formTitle.textContent = "Tambah Booking Baru";
   formModeLabel.textContent = "Form booking service";
   submitButton.textContent = "Simpan Booking";
   cancelEditButton.classList.remove("show");
-  renderSystemPreview();
+  clearValidation();
+  clearFeedback();
+  renderPreview();
 };
 
-const fillFormForEdit = (booking) => {
+const saveBooking = () => {
+  const booking = getFormData();
+
+  if (!validateBooking(booking)) {
+    return;
+  }
+
+  const isEditing = Boolean(fields.bookingId.value);
+
+  bookings = isEditing
+    ? bookings.map((item) => (item.id === booking.id ? booking : item))
+    : [...bookings, booking];
+
+  saveToStorage();
+  searchInput.value = "";
+  filterService.value = "Semua";
+  filterStatus.value = "Semua";
+  resetForm();
+  renderApp();
+  showFeedback(
+    isEditing
+      ? `Booking ${booking.kodeBooking} berhasil diperbarui.`
+      : `Booking ${booking.kodeBooking} berhasil ditambahkan.`,
+    "success",
+  );
+};
+
+const editBooking = (booking) => {
   fields.bookingId.value = booking.id;
   fields.namaPelanggan.value = booking.namaPelanggan;
   fields.nomorPlat.value = booking.nomorPlat;
@@ -499,159 +519,97 @@ const fillFormForEdit = (booking) => {
   formModeLabel.textContent = `Mode edit: ${booking.kodeBooking}`;
   submitButton.textContent = "Update Booking";
   cancelEditButton.classList.add("show");
-  clearErrors();
-  showFeedback("Mode edit aktif. Ubah data lalu klik Update Booking, atau klik Batal Edit.", "success");
-  renderSystemPreview();
-  document
-    .querySelector("#booking-section")
-    .scrollIntoView({ behavior: "smooth" });
+  clearValidation();
+  showFeedback("Mode edit aktif. Klik Batal Edit untuk kembali.", "success");
+  renderPreview();
+  document.querySelector("#booking-section").scrollIntoView({ behavior: "smooth" });
 };
 
-const updateBookingStatus = (bookingId) => {
+const changeStatus = (bookingId) => {
+  const statusList = ["Menunggu", "Diproses", "Selesai"];
+
   bookings = bookings.map((booking) => {
     if (booking.id !== bookingId) {
       return booking;
     }
 
-    const currentStatusIndex = statusFlow.indexOf(booking.statusBooking);
-    const nextStatus =
-      statusFlow[(currentStatusIndex + 1) % statusFlow.length];
+    const currentIndex = statusList.indexOf(booking.statusBooking);
+    const nextStatus = statusList[(currentIndex + 1) % statusList.length];
 
-    return {
-      ...booking,
-      statusBooking: nextStatus,
-    };
+    return { ...booking, statusBooking: nextStatus };
   });
 
-  saveBookings();
+  saveToStorage();
   renderApp();
 };
 
-const migrateBooking = (booking, index) => {
-  const services = Array.isArray(booking.jenisService)
-    ? booking.jenisService
-    : [booking.jenisService].filter(Boolean);
-  const knownServices = services.filter((serviceName) => serviceCatalog[serviceName]);
-  const serviceSummary = calculateServiceSummary(knownServices);
+submitButton.addEventListener("click", saveBooking);
 
-  return {
-    ...booking,
-    id: booking.id || createId(),
-    kodeBooking: booking.kodeBooking || `PS-${String(index + 1).padStart(3, "0")}`,
-    merekKendaraan: booking.merekKendaraan || "Belum diisi",
-    jenisService: knownServices,
-    estimasiBiaya: serviceSummary.price || booking.estimasiBiaya || 0,
-    estimasiDurasi: serviceSummary.duration || booking.estimasiDurasi || 30,
-    statusBooking: booking.statusBooking || "Menunggu",
-  };
-};
-
-const loadBookings = () => {
-  let storedBookings = [];
-
-  try {
-    storedBookings = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch (error) {
-    storedBookings = [];
-  }
-
-  const source = Array.isArray(storedBookings) && storedBookings.length
-    ? storedBookings
-    : initialBookings;
-
-  bookings = source.map(migrateBooking);
-  saveBookings();
-};
-
-bookingForm.addEventListener("submit", (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
-
-  const booking = getFormData();
-  const isValid = validateBooking(booking);
-
-  if (!isValid) {
-    return;
-  }
-
-  const isEditing = Boolean(fields.bookingId.value);
-
-  bookings = isEditing
-    ? bookings.map((item) => (item.id === booking.id ? booking : item))
-    : [...bookings, booking];
-
-  saveBookings();
-  searchInput.value = "";
-  filterService.value = "Semua";
-  filterStatus.value = "Semua";
-  renderApp();
-  resetForm();
-  showFeedback(
-    isEditing
-      ? `Booking ${booking.kodeBooking} berhasil diperbarui.`
-      : `Booking ${booking.kodeBooking} berhasil ditambahkan.`,
-    "success",
-  );
+  saveBooking();
 });
 
 resetButton.addEventListener("click", resetForm);
 cancelEditButton.addEventListener("click", resetForm);
 
-bookingTableBody.addEventListener("click", (event) => {
+tableBody.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
 
   if (!button) {
     return;
   }
 
-  const { action, id } = button.dataset;
-  const selectedBooking = bookings.find((booking) => booking.id === id);
+  const booking = bookings.find((item) => item.id === button.dataset.id);
 
-  if (!selectedBooking) {
+  if (!booking) {
     return;
   }
 
-  if (action === "edit") {
-    fillFormForEdit(selectedBooking);
+  if (button.dataset.action === "edit") {
+    editBooking(booking);
   }
 
-  if (action === "status") {
-    updateBookingStatus(id);
+  if (button.dataset.action === "status") {
+    changeStatus(booking.id);
   }
 
-  if (action === "delete") {
-    const confirmed = confirm(
-      `Hapus booking ${selectedBooking.kodeBooking} milik ${selectedBooking.namaPelanggan}?`,
-    );
+  if (button.dataset.action === "delete") {
+    const confirmed = confirm(`Hapus booking ${booking.kodeBooking}?`);
 
     if (confirmed) {
-      bookings = bookings.filter((booking) => booking.id !== id);
-      saveBookings();
+      bookings = bookings.filter((item) => item.id !== booking.id);
+      saveToStorage();
       renderApp();
 
-      if (fields.bookingId.value === id) {
+      if (fields.bookingId.value === booking.id) {
         resetForm();
       }
     }
   }
 });
 
-[searchInput, filterService, filterStatus].forEach((element) => {
-  element.addEventListener("input", renderBookings);
-  element.addEventListener("change", renderBookings);
+[searchInput, filterService, filterStatus].forEach((input) => {
+  input.addEventListener("input", renderTable);
+  input.addEventListener("change", renderTable);
 });
 
-Object.keys(fields).forEach((fieldName) => {
-  fields[fieldName].addEventListener("input", () => setError(fieldName));
-  fields[fieldName].addEventListener("change", () => setError(fieldName));
+Object.entries(fields).forEach(([fieldName, input]) => {
+  if (fieldName === "bookingId") {
+    return;
+  }
+
+  input.addEventListener("input", () => setFieldError(fieldName));
+  input.addEventListener("change", () => setFieldError(fieldName));
 });
 
 serviceInputs.forEach((input) => {
   input.addEventListener("change", () => {
-    setError("jenisService");
-    renderSystemPreview();
+    setFieldError("jenisService");
+    renderPreview();
   });
 });
 
-loadBookings();
-fields.tanggalService.min = getTodayInputValue();
+fields.tanggalService.min = getTodayValue();
+loadFromStorage();
 renderApp();
