@@ -9,10 +9,10 @@
     <i>Proyek ini dikembangkan secara bertahap (incremental) dalam satu codebase.</i>
   </p>
 
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" >
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS3" />
-  <!-- <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
-  <img src="https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript" />
+  <!-- <img src="https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP" />
   <img src="https://img.shields.io/badge/Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel" />
   <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL" /> -->
 
@@ -33,10 +33,11 @@
 
 Karena tugas ini bersifat berkelanjutan dalam satu proyek, tabel di bawah ini berfungsi sebagai **checkpoint**. Keadaan kode pada setiap tahap tugas dapat dilihat melalui tautan riwayat (commit/tag) di kolom paling kanan..
 
-| Tugas       | Materi / Deskripsi                                            | Id Commit |                                Kode / Snapshot                                 |
-| :---------- | :------------------------------------------------------------ | :-------: | :----------------------------------------------------------------------------: |
-| **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web. |  6fb84c8  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/6fb84c8) |
-| **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.    |  a1f8283  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/a1f8283) |
+| Tugas       | Materi / Deskripsi                                                                                                                                    | Id Commit |                                Kode / Snapshot                                 |
+| :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- | :-------: | :----------------------------------------------------------------------------: |
+| **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web.                                                                                         |  6fb84c8  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/6fb84c8) |
+| **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.                                                                                            |  a1f8283  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/a1f8283) |
+| **Tugas 3** | **JavaScript:** Implementasi CRUD, validasi form, manipulasi DOM, event handling, serta pencarian, filter, dan perhitungan statistik menggunakan ES6. |  bc94a0a  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/bc94a0a) |
 
 ---
 
