@@ -74,8 +74,10 @@ const filterService = document.querySelector("#filterService");
 const filterStatus = document.querySelector("#filterStatus");
 const submitButton = document.querySelector("#submitButton");
 const resetButton = document.querySelector("#resetButton");
+const cancelEditButton = document.querySelector("#cancelEditButton");
 const formTitle = document.querySelector("#formTitle");
 const formModeLabel = document.querySelector("#formModeLabel");
+const formFeedback = document.querySelector("#formFeedback");
 const serviceGroup = document.querySelector("#serviceGroup");
 const kodePreview = document.querySelector("#kodePreview");
 const estimasiPreview = document.querySelector("#estimasiPreview");
@@ -102,6 +104,16 @@ const stats = {
 
 const saveBookings = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+};
+
+const showFeedback = (message, type = "success") => {
+  formFeedback.textContent = message;
+  formFeedback.className = `form-feedback show ${type}`;
+};
+
+const clearFeedback = () => {
+  formFeedback.textContent = "";
+  formFeedback.className = "form-feedback";
 };
 
 const formatCurrency = (value) =>
@@ -152,6 +164,10 @@ const calculateServiceSummary = (selectedServices) =>
     (summary, serviceName) => {
       const service = serviceCatalog[serviceName];
 
+      if (!service) {
+        return summary;
+      }
+
       return {
         price: summary.price + service.price,
         duration: summary.duration + service.duration,
@@ -162,7 +178,7 @@ const calculateServiceSummary = (selectedServices) =>
 
 const getNextBookingCode = () => {
   const biggestNumber = bookings.reduce((biggest, booking) => {
-    const codeNumber = Number(booking.kodeBooking.replace(/\D/g, ""));
+    const codeNumber = Number(String(booking.kodeBooking || "").replace(/\D/g, ""));
     return Number.isNaN(codeNumber) ? biggest : Math.max(biggest, codeNumber);
   }, 0);
 
@@ -177,11 +193,17 @@ const setError = (fieldName, message = "") => {
   }
 
   const input = fields[fieldName];
+  if (!input) {
+    return;
+  }
+
   const formGroup = input.closest(".form-group");
   const errorLabel = document.querySelector(`#${fieldName}Error`);
 
   formGroup.classList.toggle("invalid", Boolean(message));
-  errorLabel.textContent = message;
+  if (errorLabel) {
+    errorLabel.textContent = message;
+  }
 };
 
 const clearErrors = () => {
@@ -247,6 +269,7 @@ const getFormData = () => {
 
 const validateBooking = (booking) => {
   clearErrors();
+  clearFeedback();
 
   const errors = {};
   const selectedDateTime =
@@ -315,6 +338,15 @@ const validateBooking = (booking) => {
   Object.entries(errors).forEach(([fieldName, message]) =>
     setError(fieldName, message),
   );
+
+  if (Object.keys(errors).length) {
+    showFeedback("Periksa kembali data booking yang ditandai.", "error");
+    const firstInvalidField = document.querySelector(".form-group.invalid input, .form-group.invalid select");
+
+    if (firstInvalidField) {
+      firstInvalidField.focus();
+    }
+  }
 
   return Object.keys(errors).length === 0;
 };
@@ -442,9 +474,11 @@ const resetForm = () => {
   bookingForm.reset();
   fields.bookingId.value = "";
   clearErrors();
+  clearFeedback();
   formTitle.textContent = "Tambah Booking Baru";
   formModeLabel.textContent = "Form booking service";
   submitButton.textContent = "Simpan Booking";
+  cancelEditButton.classList.remove("show");
   renderSystemPreview();
 };
 
@@ -464,7 +498,9 @@ const fillFormForEdit = (booking) => {
   formTitle.textContent = "Edit Data Booking";
   formModeLabel.textContent = `Mode edit: ${booking.kodeBooking}`;
   submitButton.textContent = "Update Booking";
+  cancelEditButton.classList.add("show");
   clearErrors();
+  showFeedback("Mode edit aktif. Ubah data lalu klik Update Booking, atau klik Batal Edit.", "success");
   renderSystemPreview();
   document
     .querySelector("#booking-section")
@@ -511,8 +547,17 @@ const migrateBooking = (booking, index) => {
 };
 
 const loadBookings = () => {
-  const storedBookings = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  const source = storedBookings?.length ? storedBookings : initialBookings;
+  let storedBookings = [];
+
+  try {
+    storedBookings = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (error) {
+    storedBookings = [];
+  }
+
+  const source = Array.isArray(storedBookings) && storedBookings.length
+    ? storedBookings
+    : initialBookings;
 
   bookings = source.map(migrateBooking);
   saveBookings();
@@ -535,11 +580,21 @@ bookingForm.addEventListener("submit", (event) => {
     : [...bookings, booking];
 
   saveBookings();
+  searchInput.value = "";
+  filterService.value = "Semua";
+  filterStatus.value = "Semua";
   renderApp();
   resetForm();
+  showFeedback(
+    isEditing
+      ? `Booking ${booking.kodeBooking} berhasil diperbarui.`
+      : `Booking ${booking.kodeBooking} berhasil ditambahkan.`,
+    "success",
+  );
 });
 
 resetButton.addEventListener("click", resetForm);
+cancelEditButton.addEventListener("click", resetForm);
 
 bookingTableBody.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");

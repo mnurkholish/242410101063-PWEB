@@ -452,6 +452,30 @@ main {
   font-size: 1rem;
 }
 
+.form-feedback {
+  display: none;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 800;
+}
+
+.form-feedback.show {
+  display: block;
+}
+
+.form-feedback.success {
+  background: #e3f7ed;
+  color: #0f6b40;
+  border: 1px solid #c8efd9;
+}
+
+.form-feedback.error {
+  background: #fdecea;
+  color: var(--danger);
+  border: 1px solid #f6c8c3;
+}
+
 .error-message {
   min-height: 18px;
   color: var(--danger);
@@ -469,6 +493,14 @@ main {
 .btn-primary,
 .btn-secondary {
   width: 100%;
+}
+
+#cancelEditButton {
+  display: none;
+}
+
+#cancelEditButton.show {
+  display: inline-flex;
 }
 
 .btn-secondary {
