@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PitStop - Sistem Antrean & Booking Bengkel</title>
+    <title>PitStop - Booking Service Bengkel</title>
     <link
       rel="icon"
       href="img/favicon-dark.ico"
@@ -19,194 +19,316 @@
 
   <body>
     <header class="navbar">
-      <div class="logo">
-        <img src="img/pitstop-logo.png" alt="pit stop logo" class="logo-icon" />
-        <h1>PITSTOP</h1>
-      </div>
+      <a class="logo" href="#">
+        <img src="img/pitstop-logo.png" alt="Logo PitStop" class="logo-icon" />
+        <span>PITSTOP</span>
+      </a>
 
       <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-      <label for="menu-toggle" class="hamburger">&#9776;</label>
+      <label for="menu-toggle" class="hamburger" aria-label="Buka menu">
+        &#9776;
+      </label>
 
       <nav class="nav-menu">
         <ul class="nav-links">
           <li><a href="#">Beranda</a></li>
-          <li><a href="#booking-section">Booking Servis</a></li>
-          <li><a href="#antrean-section">Cek Antrean</a></li>
-          <li><a href="#">Layanan Kami</a></li>
+          <li><a href="#booking-section">Booking</a></li>
+          <li><a href="#data-section">Data Booking</a></li>
+          <li><a href="#statistik-section">Statistik</a></li>
         </ul>
-        <div class="nav-actions">
-          <a href="#" class="btn-login">Login</a>
-          <a href="#" class="btn-register">Daftar</a>
-        </div>
+        <a href="#booking-section" class="btn-register">Buat Jadwal</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-content">
-        <h2>Solusi Cerdas Perawatan Kendaraan Anda</h2>
+        <p class="eyebrow">Booking service bengkel tanpa antre panjang</p>
+        <h1>Atur Jadwal Servis Kendaraan Lebih Cepat dan Rapi</h1>
         <p>
-          Booking jadwal servis tanpa antre panjang, pantau status pengerjaan
-          secara real-time, dan percayakan kendaraan Anda pada mekanik ahli
-          kami.
+          Catat data pelanggan, kendaraan, jenis layanan, jadwal kedatangan,
+          status pengerjaan, sampai estimasi biaya dalam satu dashboard ringan.
         </p>
-        <a href="#booking-section" class="btn-cta">Booking Sekarang</a>
+        <div class="hero-actions">
+          <a href="#booking-section" class="btn-cta">Booking Sekarang</a>
+          <a href="#data-section" class="btn-ghost">Lihat Antrean</a>
+        </div>
       </div>
     </section>
 
-    <div class="container" id="booking-section">
-      <aside>
-        <h3>Kondisi Bengkel</h3>
-        <div class="stat-card">
-          <h4>Kapasitas Tersedia</h4>
-          <p>
-            8 <span style="font-size: 1rem; font-weight: normal">Slot</span>
-          </p>
+    <div class="container">
+      <aside id="statistik-section" class="panel">
+        <div class="section-title compact">
+          <p>Ringkasan bengkel</p>
+          <h2>Statistik Hari Ini</h2>
         </div>
+
         <div class="stat-card">
-          <h4>Menunggu</h4>
-          <p>
-            5 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
-          </p>
+          <span class="stat-icon">#</span>
+          <div>
+            <h3>Total Booking</h3>
+            <p id="totalBooking">0</p>
+          </div>
         </div>
+
         <div class="stat-card">
-          <h4>Sedang Servis</h4>
-          <p>
-            3 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
-          </p>
+          <span class="stat-icon">Rp</span>
+          <div>
+            <h3>Total Estimasi</h3>
+            <p id="totalEstimasi">Rp0</p>
+          </div>
         </div>
-        <div class="stat-card">
-          <h4>Selesai Hari Ini</h4>
-          <p>
-            12 <span style="font-size: 1rem; font-weight: normal">Mobil</span>
-          </p>
+
+        <div class="stat-card warning">
+          <span class="stat-icon">!</span>
+          <div>
+            <h3>Menunggu</h3>
+            <p id="totalMenunggu">0</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <span class="stat-icon">OK</span>
+          <div>
+            <h3>Selesai</h3>
+            <p id="totalSelesai">0</p>
+          </div>
         </div>
       </aside>
 
       <main>
-        <section class="card">
-          <h2>Form Booking Jadwal</h2>
-          <form action="#" method="POST">
-            <div class="form-group">
-              <label for="nama">Nama Lengkap</label>
-              <input
-                type="text"
-                id="nama"
-                name="nama"
-                placeholder="Masukkan nama Anda"
-                required
-              />
+        <section class="card form-card" id="booking-section">
+          <div class="section-title">
+            <p id="formModeLabel">Form booking service</p>
+            <h2 id="formTitle">Tambah Booking Baru</h2>
+          </div>
+
+          <form id="bookingForm" novalidate>
+            <input type="hidden" id="bookingId" />
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="namaPelanggan">Nama Pelanggan</label>
+                <input
+                  type="text"
+                  id="namaPelanggan"
+                  placeholder="Masukkan nama pelanggan"
+                  autocomplete="off"
+                />
+                <small class="error-message" id="namaPelangganError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="nomorPlat">Nomor Plat</label>
+                <input
+                  type="text"
+                  id="nomorPlat"
+                  placeholder="Contoh: B 1234 XYZ"
+                  autocomplete="off"
+                />
+                <small class="error-message" id="nomorPlatError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="jenisKendaraan">Jenis Kendaraan</label>
+                <select id="jenisKendaraan">
+                  <option value="">Pilih jenis kendaraan</option>
+                  <option value="Mobil">Mobil</option>
+                  <option value="Motor">Motor</option>
+                  <option value="Pickup">Pickup</option>
+                  <option value="SUV">SUV</option>
+                </select>
+                <small class="error-message" id="jenisKendaraanError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="merekKendaraan">Merek / Seri Kendaraan</label>
+                <input
+                  type="text"
+                  id="merekKendaraan"
+                  placeholder="Contoh: Toyota Avanza 2021"
+                  autocomplete="off"
+                />
+                <small class="error-message" id="merekKendaraanError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="tanggalService">Tanggal Service</label>
+                <input type="date" id="tanggalService" />
+                <small class="error-message" id="tanggalServiceError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="jamService">Jam Kedatangan</label>
+                <input type="time" id="jamService" min="08:00" max="17:00" />
+                <small class="error-message" id="jamServiceError"></small>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="plat">Nomor Plat Kendaraan</label>
-              <input
-                type="text"
-                id="plat"
-                name="plat"
-                placeholder="Contoh: B 1234 XYZ"
-                required
-              />
+
+            <div class="form-group service-group" id="serviceGroup">
+              <label>Jenis Service</label>
+              <div class="service-options">
+                <label class="service-option">
+                  <input type="checkbox" name="jenisService" value="Ganti Oli" />
+                  <span>
+                    Ganti Oli
+                    <small>Rp350.000 / 30 menit</small>
+                  </span>
+                </label>
+                <label class="service-option">
+                  <input
+                    type="checkbox"
+                    name="jenisService"
+                    value="Servis Berkala"
+                  />
+                  <span>
+                    Servis Berkala
+                    <small>Rp850.000 / 120 menit</small>
+                  </span>
+                </label>
+                <label class="service-option">
+                  <input
+                    type="checkbox"
+                    name="jenisService"
+                    value="Perbaikan Rem"
+                  />
+                  <span>
+                    Perbaikan Rem
+                    <small>Rp275.000 / 60 menit</small>
+                  </span>
+                </label>
+                <label class="service-option">
+                  <input
+                    type="checkbox"
+                    name="jenisService"
+                    value="Tune Up Mesin"
+                  />
+                  <span>
+                    Tune Up Mesin
+                    <small>Rp600.000 / 90 menit</small>
+                  </span>
+                </label>
+                <label class="service-option">
+                  <input
+                    type="checkbox"
+                    name="jenisService"
+                    value="Spooring Balancing"
+                  />
+                  <span>
+                    Spooring Balancing
+                    <small>Rp450.000 / 60 menit</small>
+                  </span>
+                </label>
+                <label class="service-option">
+                  <input
+                    type="checkbox"
+                    name="jenisService"
+                    value="Diagnosa Mesin"
+                  />
+                  <span>
+                    Diagnosa Mesin
+                    <small>Rp250.000 / 45 menit</small>
+                  </span>
+                </label>
+              </div>
+              <small class="error-message" id="jenisServiceError"></small>
             </div>
-            <div class="form-group">
-              <label for="jenis_servis">Jenis Servis</label>
-              <select id="jenis_servis" name="jenis_servis" required>
-                <option value="">Pilih Servis...</option>
-                <option value="ganti_oli">Ganti Oli (Estimasi 30 Menit)</option>
-                <option value="servis_berkala">
-                  Servis Berkala (Estimasi 120 Menit)
-                </option>
-                <option value="rem">Perbaikan Rem (Estimasi 60 Menit)</option>
-                <option value="diagnosa">
-                  Diagnosa Mesin Komputer (Estimasi 45 Menit)
-                </option>
-              </select>
+
+            <div class="system-preview">
+              <div>
+                <span>Kode otomatis</span>
+                <strong id="kodePreview">Dibuat saat disimpan</strong>
+              </div>
+              <div>
+                <span>Estimasi biaya</span>
+                <strong id="estimasiPreview">Rp0</strong>
+              </div>
+              <div>
+                <span>Estimasi durasi</span>
+                <strong id="durasiPreview">0 menit</strong>
+              </div>
+              <div>
+                <span>Status sistem</span>
+                <strong id="statusPreview">Menunggu</strong>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="tanggal">Tanggal Kedatangan</label>
-              <input type="date" id="tanggal" name="tanggal" required />
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="submitButton">
+                Simpan Booking
+              </button>
+              <button type="button" class="btn-secondary" id="resetButton">
+                Reset
+              </button>
             </div>
-            <div class="form-group">
-              <label for="jam">Waktu Kedatangan</label>
-              <input
-                type="time"
-                id="jam"
-                name="jam"
-                min="08:00"
-                max="17:00"
-                required
-              />
-            </div>
-            <button type="submit">Konfirmasi Booking</button>
           </form>
         </section>
 
-        <section class="card" id="antrean-section">
-          <h2>Antrean Live Saat Ini</h2>
-
-          <div class="css-filter-wrapper">
-            <input type="radio" name="antreanFilter" id="filter-all" checked />
-            <input type="radio" name="antreanFilter" id="filter-dikerjakan" />
-            <input type="radio" name="antreanFilter" id="filter-menunggu" />
-
-            <div class="filter-controls">
-              <span class="filter-label">Filter Status:</span>
-              <label for="filter-all" class="filter-btn">Semua</label>
-              <label for="filter-dikerjakan" class="filter-btn"
-                >Dikerjakan</label
-              >
-              <label for="filter-menunggu" class="filter-btn">Menunggu</label>
+        <section class="card" id="data-section">
+          <div class="table-heading">
+            <div class="section-title">
+              <p>Antrean dan riwayat</p>
+              <h2>Daftar Booking Service</h2>
             </div>
 
-            <div class="table-responsive">
-              <table>
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Plat</th>
-                    <th>Servis</th>
-                    <th>Waktu</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody class="filter-target">
-                  <tr class="row-dikerjakan">
-                    <td>1</td>
-                    <td>B 1234 XYZ</td>
-                    <td>Ganti Oli</td>
-                    <td>09:00</td>
-                    <td>
-                      <span class="status-badge status-processing"
-                        >Dikerjakan</span
-                      >
-                    </td>
-                  </tr>
-                  <tr class="row-menunggu">
-                    <td>2</td>
-                    <td>D 5678 ABC</td>
-                    <td>Servis Berkala</td>
-                    <td>10:00</td>
-                    <td>
-                      <span class="status-badge status-pending">Menunggu</span>
-                    </td>
-                  </tr>
-                  <tr class="row-menunggu">
-                    <td>3</td>
-                    <td>F 9012 IJ</td>
-                    <td>Perbaikan Rem</td>
-                    <td>13:00</td>
-                    <td>
-                      <span class="status-badge status-pending">Menunggu</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="toolbar">
+              <div class="search-box">
+                <label for="searchInput">Cari</label>
+                <input
+                  type="search"
+                  id="searchInput"
+                  placeholder="Nama, kode, atau plat"
+                />
+              </div>
+              <div class="search-box">
+                <label for="filterService">Filter Service</label>
+                <select id="filterService">
+                  <option value="Semua">Semua Service</option>
+                  <option value="Ganti Oli">Ganti Oli</option>
+                  <option value="Servis Berkala">Servis Berkala</option>
+                  <option value="Perbaikan Rem">Perbaikan Rem</option>
+                  <option value="Tune Up Mesin">Tune Up Mesin</option>
+                  <option value="Spooring Balancing">Spooring Balancing</option>
+                  <option value="Diagnosa Mesin">Diagnosa Mesin</option>
+                </select>
+              </div>
+              <div class="search-box">
+                <label for="filterStatus">Filter Status</label>
+                <select id="filterStatus">
+                  <option value="Semua">Semua Status</option>
+                  <option value="Menunggu">Menunggu</option>
+                  <option value="Diproses">Diproses</option>
+                  <option value="Selesai">Selesai</option>
+                </select>
+              </div>
             </div>
           </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Pelanggan</th>
+                  <th>Kendaraan</th>
+                  <th>Service</th>
+                  <th>Jadwal</th>
+                  <th>Biaya</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="bookingTableBody"></tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="emptyState">Belum ada data booking.</p>
         </section>
       </main>
     </div>
 
     <footer>
-      <p>&copy; 2026 PitStop - Sistem Antrean Cerdas Bengkel.</p>
+      <p>&copy; 2026 PitStop - Sistem Booking Service Bengkel.</p>
     </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
