@@ -93,7 +93,7 @@ Karena tugas ini bersifat berkelanjutan dalam satu proyek, tabel di bawah ini be
 
   3. Buat database di phpMyAdminBuka:
   - http://localhost/phpmyadmin
-  - Buat database baru, dengan nama 'pitstop'
+  - Buat database baru, dengan nama `pitstop`
   4. Konfigurasi file <small>`.env`</small>:
      ```Bash
      DB_DATABASE=pitstop
