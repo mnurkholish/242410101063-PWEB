@@ -38,7 +38,7 @@ Karena tugas ini bersifat berkelanjutan dalam satu proyek, tabel di bawah ini be
 | **Tugas 1** | **HTML Dasar:** Struktur, tag semantik, dan elemen dasar web.                                                                                         |  6fb84c8  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/6fb84c8) |
 | **Tugas 2** | **CSS Styling:** Menambahkan style, layouting, dan desain.                                                                                            |  a1f8283  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/a1f8283) |
 | **Tugas 3** | **JavaScript:** Implementasi CRUD, validasi form, manipulasi DOM, event handling, serta pencarian, filter, dan perhitungan statistik menggunakan ES6. |  bc94a0a  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/bc94a0a) |
-| **Tugas 4** | **Laravel:** Instalasi & setup Laravel, konfigurasi environment, pembuatan routing, controller, dan view sederhana (dashboard & halaman statis).      |  4ac2874  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/4ac2874) |
+| **Tugas 4** | **Laravel:** Instalasi & setup Laravel, konfigurasi environment, pembuatan routing, controller, dan view sederhana (dashboard & halaman statis).      |  331e7e4  | [🔍 Lihat Kode](https://github.com/mnurkholish/242410101063-PWEB/tree/331e7e4) |
 
 ---
 
