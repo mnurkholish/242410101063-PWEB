@@ -1,72 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $buttonClass =
+            'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
 
-    <body class="min-h-screen overflow-x-hidden bg-[#f3f6fb] text-slate-800 antialiased">
-        @php
-            $buttonClass =
-                'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
+        $values = [
+            [
+                'number' => '01',
+                'title' => 'Pelayanan Tepat Waktu',
+                'description' =>
+                    'PitStop mengutamakan proses service yang terjadwal, jelas, dan tidak membuat pelanggan menunggu tanpa kepastian.',
+            ],
+            [
+                'number' => '02',
+                'title' => 'Teknisi Terpercaya',
+                'description' =>
+                    'Setiap kendaraan ditangani dengan teliti oleh tim yang memahami kebutuhan perawatan harian maupun perbaikan teknis.',
+            ],
+            [
+                'number' => '03',
+                'title' => 'Transparansi Layanan',
+                'description' =>
+                    'Pelanggan mendapatkan informasi layanan, estimasi biaya, dan progres pekerjaan secara terbuka sejak awal.',
+            ],
+        ];
 
-            $values = [
-                [
-                    'number' => '01',
-                    'title' => 'Pelayanan Tepat Waktu',
-                    'description' =>
-                        'PitStop mengutamakan proses service yang terjadwal, jelas, dan tidak membuat pelanggan menunggu tanpa kepastian.',
-                ],
-                [
-                    'number' => '02',
-                    'title' => 'Teknisi Terpercaya',
-                    'description' =>
-                        'Setiap kendaraan ditangani dengan teliti oleh tim yang memahami kebutuhan perawatan harian maupun perbaikan teknis.',
-                ],
-                [
-                    'number' => '03',
-                    'title' => 'Transparansi Layanan',
-                    'description' =>
-                        'Pelanggan mendapatkan informasi layanan, estimasi biaya, dan progres pekerjaan secara terbuka sejak awal.',
-                ],
-            ];
+        $services = [
+            'Ganti oli dan pemeriksaan ringan kendaraan.',
+            'Servis berkala untuk mobil, motor, SUV, dan pickup.',
+            'Perbaikan rem, tune up mesin, serta diagnosa kerusakan.',
+            'Spooring balancing untuk menjaga kenyamanan berkendara.',
+        ];
+    @endphp
 
-            $services = [
-                'Ganti oli dan pemeriksaan ringan kendaraan.',
-                'Servis berkala untuk mobil, motor, SUV, dan pickup.',
-                'Perbaikan rem, tune up mesin, serta diagnosa kerusakan.',
-                'Spooring balancing untuk menjaga kenyamanan berkendara.',
-            ];
-        @endphp
-
-        <header
-            class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/90 bg-white/95 px-[5%] py-3.5 backdrop-blur">
-            <a class="inline-flex items-center gap-3 font-black tracking-[0.08em]" href="{{ url('/') }}">
-                <img src="{{ asset('img/pitstop-logo.png') }}" alt="Logo PitStop" class="h-10 w-10">
-                <span>PITSTOP</span>
-            </a>
-
-            <input type="checkbox" id="menu-toggle" class="peer sr-only">
-            <label for="menu-toggle"
-                class="grid h-11 w-11 cursor-pointer place-items-center rounded-lg border border-slate-200 text-2xl leading-none text-blue-950 lg:hidden"
-                aria-label="Buka menu">
-                &#9776;
-            </label>
-
-            <nav
-                class="hidden w-full border-t border-slate-200 bg-white pt-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] peer-checked:grid peer-checked:gap-4 lg:flex lg:w-auto lg:items-center lg:gap-9 lg:border-0 lg:bg-transparent lg:pt-0 lg:shadow-none">
-                <ul class="grid gap-4 text-sm font-bold text-slate-500 lg:flex lg:items-center lg:gap-8">
-                    <li><a class="transition hover:text-blue-600" href="{{ url('/') }}">Beranda</a></li>
-                    <li><a class="text-blue-600" href="{{ url('/tentang') }}">Tentang</a></li>
-                    <li><a class="transition hover:text-blue-600" href="{{ url('/#booking-section') }}">Booking</a></li>
-                    <li><a class="transition hover:text-blue-600" href="#layanan">Layanan</a></li>
-                    <li><a class="transition hover:text-blue-600" href="{{ url('/dashboard') }}">Dashboard</a></li>
-                </ul>
-                <a href="{{ url('/#booking-section') }}"
-                    class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                    Buat Jadwal
-                </a>
-            </nav>
-        </header>
-
-        <main>
             <section
                 class="relative isolate overflow-hidden bg-[#071933] px-[5%] py-20 text-white after:absolute after:bottom-0 after:right-[5%] after:h-3 after:w-[min(520px,70vw)] after:bg-amber-400 after:content-['']">
                 <div
@@ -191,10 +158,4 @@
                     </a>
                 </div>
             </section>
-        </main>
-
-        <footer class="bg-[#071933] px-[5%] py-6 text-center text-white/75">
-            <p>&copy; 2026 PitStop - Sistem Booking Service Bengkel.</p>
-        </footer>
-    </body>
 @endsection

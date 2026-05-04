@@ -109,6 +109,19 @@
         @apply block;
     }
 
+    .flash-toast {
+        @apply fixed right-4 bottom-4 z-50 flex w-[min(360px,calc(100vw-2rem))] items-start gap-3 rounded-lg border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-[0_18px_45px_rgba(14,43,82,0.18)] sm:right-6 sm:bottom-6;
+        animation: flash-toast-hide 4.5s ease forwards;
+    }
+
+    .flash-toast-icon {
+        @apply grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-emerald-50 text-xs font-black text-emerald-600;
+    }
+
+    .flash-toast-title {
+        @apply text-xs font-black uppercase tracking-[0.12em] text-emerald-600;
+    }
+
     th,
     td {
         @apply border-b border-slate-200 px-4 py-4 text-left align-middle;
@@ -120,6 +133,21 @@
 
     tbody tr {
         @apply transition hover:bg-slate-50;
+    }
+}
+
+@keyframes flash-toast-hide {
+    0%,
+    75% {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(12px);
+        visibility: hidden;
     }
 }
 

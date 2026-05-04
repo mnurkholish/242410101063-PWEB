@@ -8,5 +8,6 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::post('/dashboard/bookings', [DashboardController::class, 'store'])->name('dashboard.bookings.store');
 
 Route::view('/tentang', 'tentang');

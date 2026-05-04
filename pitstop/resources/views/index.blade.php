@@ -1,53 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $services = [
+            ['name' => 'Ganti Oli', 'detail' => 'Rp350.000 / 30 menit'],
+            ['name' => 'Servis Berkala', 'detail' => 'Rp850.000 / 120 menit'],
+            ['name' => 'Perbaikan Rem', 'detail' => 'Rp275.000 / 60 menit'],
+            ['name' => 'Tune Up Mesin', 'detail' => 'Rp600.000 / 90 menit'],
+            ['name' => 'Spooring Balancing', 'detail' => 'Rp450.000 / 60 menit'],
+            ['name' => 'Diagnosa Mesin', 'detail' => 'Rp250.000 / 45 menit'],
+        ];
 
-    <body class="min-h-screen overflow-x-hidden bg-[#f3f6fb] text-slate-800 antialiased">
-        @php
-            $services = [
-                ['name' => 'Ganti Oli', 'detail' => 'Rp350.000 / 30 menit'],
-                ['name' => 'Servis Berkala', 'detail' => 'Rp850.000 / 120 menit'],
-                ['name' => 'Perbaikan Rem', 'detail' => 'Rp275.000 / 60 menit'],
-                ['name' => 'Tune Up Mesin', 'detail' => 'Rp600.000 / 90 menit'],
-                ['name' => 'Spooring Balancing', 'detail' => 'Rp450.000 / 60 menit'],
-                ['name' => 'Diagnosa Mesin', 'detail' => 'Rp250.000 / 45 menit'],
-            ];
-
-            $fieldClass =
-                'min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100';
-            $labelClass = 'text-sm font-extrabold text-slate-800';
-            $buttonClass =
-                'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
-        @endphp
-
-        <header
-            class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/90 bg-white/95 px-[5%] py-3.5 backdrop-blur">
-            <a class="inline-flex items-center gap-3 font-black tracking-[0.08em]" href="#">
-                <img src="{{ asset('img/pitstop-logo.png') }}" alt="Logo PitStop" class="h-10 w-10">
-                <span>PITSTOP</span>
-            </a>
-
-            <input type="checkbox" id="menu-toggle" class="peer sr-only">
-            <label for="menu-toggle"
-                class="grid h-11 w-11 cursor-pointer place-items-center rounded-lg border border-slate-200 text-2xl leading-none text-blue-950 lg:hidden"
-                aria-label="Buka menu">
-                &#9776;
-            </label>
-
-            <nav
-                class="hidden w-full border-t border-slate-200 bg-white pt-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] peer-checked:grid peer-checked:gap-4 lg:flex lg:w-auto lg:items-center lg:gap-9 lg:border-0 lg:bg-transparent lg:pt-0 lg:shadow-none">
-                <ul class="grid gap-4 text-sm font-bold text-slate-500 lg:flex lg:items-center lg:gap-8">
-                    <li><a class="transition hover:text-blue-600" href="#">Beranda</a></li>
-                    <li><a class="transition hover:text-blue-600" href="#booking-section">Booking</a></li>
-                    <li><a class="transition hover:text-blue-600" href="#data-section">Data Booking</a></li>
-                    <li><a class="transition hover:text-blue-600" href="#statistik-section">Statistik</a></li>
-                </ul>
-                <a href="#booking-section"
-                    class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                    Buat Jadwal
-                </a>
-            </nav>
-        </header>
+        $fieldClass =
+            'min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100';
+        $labelClass = 'text-sm font-extrabold text-slate-800';
+        $buttonClass =
+            'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
+    @endphp
 
         <section
             class="relative flex min-h-[78vh] items-center overflow-hidden px-[5%] py-20 text-white after:absolute after:bottom-0 after:right-[5%] after:h-3 after:w-[min(520px,70vw)] after:bg-amber-400 after:content-['']"
@@ -83,44 +52,13 @@
                     <h2 class="mt-1 text-xl font-black leading-tight text-slate-800">Statistik Hari Ini</h2>
                 </div>
 
-                <div class="flex items-center gap-4 rounded-lg border border-blue-100 bg-blue-50 p-4">
-                    <span
-                        class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-600">#</span>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-500">Total Booking</h3>
-                        <p id="totalBooking" class="text-2xl font-black text-slate-800">0</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 rounded-lg border border-blue-100 bg-blue-50 p-4">
-                    <span
-                        class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-600">Rp</span>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-500">Total Estimasi</h3>
-                        <p id="totalEstimasi" class="text-2xl font-black text-slate-800">Rp0</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
-                    <span
-                        class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-600">!</span>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-500">Menunggu</h3>
-                        <p id="totalMenunggu" class="text-2xl font-black text-slate-800">0</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-                    <span
-                        class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-600">OK</span>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-500">Selesai</h3>
-                        <p id="totalSelesai" class="text-2xl font-black text-slate-800">0</p>
-                    </div>
-                </div>
+                <x-stat-card judul="Total Booking" nilai="0" ikon="#" warna="blue" id="totalBooking" />
+                <x-stat-card judul="Total Estimasi" nilai="Rp0" ikon="Rp" warna="blue" id="totalEstimasi" />
+                <x-stat-card judul="Menunggu" nilai="0" ikon="!" warna="amber" id="totalMenunggu" />
+                <x-stat-card judul="Selesai" nilai="0" ikon="OK" warna="emerald" id="totalSelesai" />
             </aside>
 
-            <main class="grid min-w-0 gap-6">
+            <div class="grid min-w-0 gap-6">
                 <section
                     class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:p-8"
                     id="booking-section">
@@ -132,27 +70,29 @@
                     </div>
                     <div class="form-feedback" id="formFeedback" role="status"></div>
 
-                    <form id="bookingForm" novalidate>
-                        <input type="hidden" id="bookingId">
+                    <form id="bookingForm" action="{{ route('dashboard.bookings.store') }}" method="POST" novalidate>
+                        @csrf
+                        <input type="hidden" id="bookingId" name="bookingId">
+                        <input type="hidden" id="kodeBookingInput" name="kodeBooking">
 
                         <div class="grid gap-4 md:grid-cols-2">
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="namaPelanggan">Nama Pelanggan</label>
                                 <input class="{{ $fieldClass }}" type="text" id="namaPelanggan"
-                                    placeholder="Masukkan nama pelanggan" autocomplete="off">
+                                    name="namaPelanggan" placeholder="Masukkan nama pelanggan" autocomplete="off">
                                 <small class="error-message" id="namaPelangganError"></small>
                             </div>
 
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="nomorPlat">Nomor Plat</label>
                                 <input class="{{ $fieldClass }}" type="text" id="nomorPlat"
-                                    placeholder="Contoh: B 1234 XYZ" autocomplete="off">
+                                    name="nomorPlat" placeholder="Contoh: B 1234 XYZ" autocomplete="off">
                                 <small class="error-message" id="nomorPlatError"></small>
                             </div>
 
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="jenisKendaraan">Jenis Kendaraan</label>
-                                <select class="{{ $fieldClass }}" id="jenisKendaraan">
+                                <select class="{{ $fieldClass }}" id="jenisKendaraan" name="jenisKendaraan">
                                     <option value="">Pilih jenis kendaraan</option>
                                     <option value="Mobil">Mobil</option>
                                     <option value="Motor">Motor</option>
@@ -165,20 +105,20 @@
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="merekKendaraan">Merek / Seri Kendaraan</label>
                                 <input class="{{ $fieldClass }}" type="text" id="merekKendaraan"
-                                    placeholder="Contoh: Toyota Avanza 2021" autocomplete="off">
+                                    name="merekKendaraan" placeholder="Contoh: Toyota Avanza 2021" autocomplete="off">
                                 <small class="error-message" id="merekKendaraanError"></small>
                             </div>
 
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="tanggalService">Tanggal Service</label>
-                                <input class="{{ $fieldClass }}" type="date" id="tanggalService">
+                                <input class="{{ $fieldClass }}" type="date" id="tanggalService" name="tanggalService">
                                 <small class="error-message" id="tanggalServiceError"></small>
                             </div>
 
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="jamService">Jam Kedatangan</label>
-                                <input class="{{ $fieldClass }}" type="time" id="jamService" min="08:00"
-                                    max="17:00">
+                                <input class="{{ $fieldClass }}" type="time" id="jamService" name="jamService"
+                                    min="08:00" max="17:00">
                                 <small class="error-message" id="jamServiceError"></small>
                             </div>
                         </div>
@@ -190,7 +130,7 @@
                                     <label
                                         class="service-option flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5 transition hover:border-blue-600 hover:bg-blue-50">
                                         <input class="mt-1 h-4.5 w-4.5 accent-blue-600" type="checkbox"
-                                            name="jenisService" value="{{ $service['name'] }}">
+                                            name="jenisService[]" value="{{ $service['name'] }}">
                                         <span class="grid min-w-0 gap-0.5 font-extrabold">
                                             {{ $service['name'] }}
                                             <small
@@ -222,7 +162,7 @@
                         </div>
 
                         <div class="mt-5 flex flex-wrap gap-3">
-                            <button type="button"
+                            <button type="submit"
                                 class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950"
                                 id="submitButton">
                                 Simpan Booking
@@ -297,11 +237,6 @@
                     </div>
                     <p class="empty-state" id="emptyState">Belum ada data booking.</p>
                 </section>
-            </main>
+            </div>
         </div>
-
-        <footer class="mt-12 bg-[#071933] px-[5%] py-6 text-center text-white/75">
-            <p>&copy; 2026 PitStop - Sistem Booking Service Bengkel.</p>
-        </footer>
-    </body>
 @endsection

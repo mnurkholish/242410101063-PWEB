@@ -69,7 +69,7 @@ const formTitle = document.querySelector("#formTitle");
 const formModeLabel = document.querySelector("#formModeLabel");
 const formFeedback = document.querySelector("#formFeedback");
 const serviceGroup = document.querySelector("#serviceGroup");
-const serviceInputs = [...document.querySelectorAll('input[name="jenisService"]')];
+const serviceInputs = [...document.querySelectorAll('input[name="jenisService[]"]')];
 
 const fields = {
   bookingId: document.querySelector("#bookingId"),
@@ -93,6 +93,7 @@ const errors = {
 
 const previews = {
   kode: document.querySelector("#kodePreview"),
+  kodeInput: document.querySelector("#kodeBookingInput"),
   biaya: document.querySelector("#estimasiPreview"),
   durasi: document.querySelector("#durasiPreview"),
   status: document.querySelector("#statusPreview"),
@@ -103,6 +104,25 @@ const stats = {
   totalEstimasi: document.querySelector("#totalEstimasi"),
   totalMenunggu: document.querySelector("#totalMenunggu"),
   totalSelesai: document.querySelector("#totalSelesai"),
+};
+
+const showToast = (message, title = "Berhasil") => {
+  document.querySelectorAll(".flash-toast.is-js-toast").forEach((toast) => toast.remove());
+
+  const toast = document.createElement("div");
+  toast.className = "flash-toast is-js-toast";
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
+  toast.innerHTML = `
+    <span class="flash-toast-icon">OK</span>
+    <div>
+      <p class="flash-toast-title">${title}</p>
+      <p>${message}</p>
+    </div>
+  `;
+
+  document.body.append(toast);
+  setTimeout(() => toast.remove(), 4600);
 };
 
 const createId = () => `booking-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -368,8 +388,10 @@ const renderPreview = () => {
   const selectedServices = getSelectedServices();
   const summary = calculateSummary(selectedServices);
   const editedBooking = bookings.find((booking) => booking.id === fields.bookingId.value);
+  const bookingCode = getBookingCode();
 
-  previews.kode.textContent = getBookingCode();
+  previews.kode.textContent = bookingCode;
+  previews.kodeInput.value = bookingCode;
   previews.biaya.textContent = formatCurrency(summary.price);
   previews.durasi.textContent = formatDuration(summary.duration);
   previews.status.textContent = editedBooking?.statusBooking || "Menunggu";
@@ -475,10 +497,11 @@ const resetForm = () => {
   renderPreview();
 };
 
-const saveBooking = () => {
+const saveBooking = (event) => {
   const booking = getFormData();
 
   if (!validateBooking(booking)) {
+    event?.preventDefault();
     return;
   }
 
@@ -489,17 +512,6 @@ const saveBooking = () => {
     : [...bookings, booking];
 
   saveToStorage();
-  searchInput.value = "";
-  filterService.value = "Semua";
-  filterStatus.value = "Semua";
-  resetForm();
-  renderApp();
-  showFeedback(
-    isEditing
-      ? `Booking ${booking.kodeBooking} berhasil diperbarui.`
-      : `Booking ${booking.kodeBooking} berhasil ditambahkan.`,
-    "success",
-  );
 };
 
 const editBooking = (booking) => {
@@ -541,13 +553,11 @@ const changeStatus = (bookingId) => {
 
   saveToStorage();
   renderApp();
+  showToast("Status booking berhasil diperbarui.");
 };
 
-submitButton.addEventListener("click", saveBooking);
-
 form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  saveBooking();
+  saveBooking(event);
 });
 
 resetButton.addEventListener("click", resetForm);
@@ -581,6 +591,7 @@ tableBody.addEventListener("click", (event) => {
       bookings = bookings.filter((item) => item.id !== booking.id);
       saveToStorage();
       renderApp();
+      showToast(`Booking ${booking.kodeBooking} berhasil dihapus.`);
 
       if (fields.bookingId.value === booking.id) {
         resetForm();
