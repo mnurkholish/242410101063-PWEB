@@ -159,3 +159,13 @@
                 </div>
             </section>
 @endsection
+
+@push('scripts')
+    <script>
+        document.querySelectorAll('a[href="#layanan"]').forEach((link) => {
+            link.addEventListener('click', () => {
+                sessionStorage.setItem('pitstopLastSection', 'layanan');
+            });
+        });
+    </script>
+@endpush

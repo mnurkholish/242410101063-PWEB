@@ -240,3 +240,11 @@
             </div>
         </div>
 @endsection
+
+@push('scripts')
+    <script>
+        window.PitStopPage = {
+            name: 'beranda',
+        };
+    </script>
+@endpush

@@ -232,7 +232,54 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="bookingTableBody"></tbody>
+                            <tbody id="bookingTableBody">
+                                @forelse ($bookings as $booking)
+                                    @php
+                                        $durasi = $booking['estimasiDurasi'];
+                                        $jam = intdiv($durasi, 60);
+                                        $menit = $durasi % 60;
+                                        $durasiText = $durasi < 60
+                                            ? "{$durasi} menit"
+                                            : ($menit ? "{$jam} jam {$menit} menit" : "{$jam} jam");
+                                    @endphp
+                                    <tr>
+                                        <td data-label="Kode"><strong>{{ $booking['kodeBooking'] }}</strong></td>
+                                        <td data-label="Pelanggan">
+                                            {{ $booking['namaPelanggan'] }}
+                                            <div class="muted">{{ $booking['nomorPlat'] }}</div>
+                                        </td>
+                                        <td data-label="Kendaraan">
+                                            {{ $booking['jenisKendaraan'] }}
+                                            <div class="muted">{{ $booking['merekKendaraan'] }}</div>
+                                        </td>
+                                        <td data-label="Service">
+                                            {{ implode(', ', $booking['jenisService']) }}
+                                            <div class="muted">{{ $durasiText }}</div>
+                                        </td>
+                                        <td data-label="Jadwal">
+                                            {{ date('d M Y', strtotime($booking['tanggalService'])) }}
+                                            <div class="muted">{{ $booking['jamService'] }} WIB</div>
+                                        </td>
+                                        <td data-label="Biaya">Rp{{ number_format($booking['estimasiBiaya'], 0, ',', '.') }}</td>
+                                        <td data-label="Status">
+                                            <span class="status-badge status-{{ strtolower($booking['statusBooking']) }}">
+                                                {{ $booking['statusBooking'] }}
+                                            </span>
+                                        </td>
+                                        <td data-label="Aksi">
+                                            <div class="action-group">
+                                                <button class="btn-action btn-edit" type="button">Edit</button>
+                                                <button class="btn-action btn-status" type="button">Status</button>
+                                                <button class="btn-action btn-delete" type="button">Hapus</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center text-slate-500">Belum ada data booking.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
                         </table>
                     </div>
                     <p class="empty-state" id="emptyState">Belum ada data booking.</p>
@@ -240,3 +287,11 @@
             </div>
         </div>
 @endsection
+
+@push('scripts')
+    <script>
+        window.PitStopPage = {
+            name: 'dashboard',
+        };
+    </script>
+@endpush

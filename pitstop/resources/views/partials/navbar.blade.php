@@ -29,6 +29,9 @@
                 <a class="{{ request()->is('tentang') ? $activeClass : $linkClass }}" href="{{ url('/tentang') }}">Tentang</a>
             </li>
             <li>
+                <a class="{{ request()->is('kontak') ? $activeClass : $linkClass }}" href="{{ route('kontak') }}">Kontak</a>
+            </li>
+            <li>
                 <a class="{{ $linkClass }}" href="{{ url('/#booking-section') }}">Booking</a>
             </li>
             <li>

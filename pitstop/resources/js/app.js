@@ -556,71 +556,73 @@ const changeStatus = (bookingId) => {
   showToast("Status booking berhasil diperbarui.");
 };
 
-form.addEventListener("submit", (event) => {
-  saveBooking(event);
-});
+if (form && tableBody) {
+  form.addEventListener("submit", (event) => {
+    saveBooking(event);
+  });
 
-resetButton.addEventListener("click", resetForm);
-cancelEditButton.addEventListener("click", resetForm);
+  resetButton.addEventListener("click", resetForm);
+  cancelEditButton.addEventListener("click", resetForm);
 
-tableBody.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-action]");
+  tableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-action]");
 
-  if (!button) {
-    return;
-  }
+    if (!button) {
+      return;
+    }
 
-  const booking = bookings.find((item) => item.id === button.dataset.id);
+    const booking = bookings.find((item) => item.id === button.dataset.id);
 
-  if (!booking) {
-    return;
-  }
+    if (!booking) {
+      return;
+    }
 
-  if (button.dataset.action === "edit") {
-    editBooking(booking);
-  }
+    if (button.dataset.action === "edit") {
+      editBooking(booking);
+    }
 
-  if (button.dataset.action === "status") {
-    changeStatus(booking.id);
-  }
+    if (button.dataset.action === "status") {
+      changeStatus(booking.id);
+    }
 
-  if (button.dataset.action === "delete") {
-    const confirmed = confirm(`Hapus booking ${booking.kodeBooking}?`);
+    if (button.dataset.action === "delete") {
+      const confirmed = confirm(`Hapus booking ${booking.kodeBooking}?`);
 
-    if (confirmed) {
-      bookings = bookings.filter((item) => item.id !== booking.id);
-      saveToStorage();
-      renderApp();
-      showToast(`Booking ${booking.kodeBooking} berhasil dihapus.`);
+      if (confirmed) {
+        bookings = bookings.filter((item) => item.id !== booking.id);
+        saveToStorage();
+        renderApp();
+        showToast(`Booking ${booking.kodeBooking} berhasil dihapus.`);
 
-      if (fields.bookingId.value === booking.id) {
-        resetForm();
+        if (fields.bookingId.value === booking.id) {
+          resetForm();
+        }
       }
     }
-  }
-});
-
-[searchInput, filterService, filterStatus].forEach((input) => {
-  input.addEventListener("input", renderTable);
-  input.addEventListener("change", renderTable);
-});
-
-Object.entries(fields).forEach(([fieldName, input]) => {
-  if (fieldName === "bookingId") {
-    return;
-  }
-
-  input.addEventListener("input", () => setFieldError(fieldName));
-  input.addEventListener("change", () => setFieldError(fieldName));
-});
-
-serviceInputs.forEach((input) => {
-  input.addEventListener("change", () => {
-    setFieldError("jenisService");
-    renderPreview();
   });
-});
 
-fields.tanggalService.min = getTodayValue();
-loadFromStorage();
-renderApp();
+  [searchInput, filterService, filterStatus].forEach((input) => {
+    input.addEventListener("input", renderTable);
+    input.addEventListener("change", renderTable);
+  });
+
+  Object.entries(fields).forEach(([fieldName, input]) => {
+    if (fieldName === "bookingId") {
+      return;
+    }
+
+    input.addEventListener("input", () => setFieldError(fieldName));
+    input.addEventListener("change", () => setFieldError(fieldName));
+  });
+
+  serviceInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      setFieldError("jenisService");
+      renderPreview();
+    });
+  });
+
+  fields.tanggalService.min = getTodayValue();
+  loadFromStorage();
+  renderApp();
+}

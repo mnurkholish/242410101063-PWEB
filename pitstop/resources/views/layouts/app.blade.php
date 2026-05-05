@@ -30,6 +30,8 @@
     <footer class="mt-12 bg-[#071933] px-[5%] py-6 text-center text-white/75">
         <p>&copy; 2026 PitStop - Sistem Booking Service Bengkel.</p>
     </footer>
+
+    @stack('scripts')
 </body>
 
 </html>
