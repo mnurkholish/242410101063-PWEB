@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ asset('img/favicon-dark.ico') }}" media="(prefers-color-scheme: dark)">
     <link rel="icon" href="{{ asset('img/favicon-light.ico') }}" media="(prefers-color-scheme: light)">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="min-h-screen overflow-x-hidden bg-[#f3f6fb] text-slate-800 antialiased">
@@ -23,6 +24,17 @@
                 </div>
             </div>
         @endif
+
+        @if (session('error'))
+            <div class="flash-toast flash-toast-error" role="alert" aria-live="assertive">
+                <span class="flash-toast-icon flash-toast-icon-error">!</span>
+                <div>
+                    <p class="flash-toast-title flash-toast-title-error">Gagal</p>
+                    <p>{{ session('error') }}</p>
+                </div>
+            </div>
+        @endif
+
 
         @yield('content')
     </main>

@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,7 +6,7 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Segoe UI', Arial, ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Segoe UI", Arial, ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -120,6 +120,18 @@
 
     .flash-toast-title {
         @apply text-xs font-black uppercase tracking-[0.12em] text-emerald-600;
+    }
+
+    .flash-toast-error {
+        @apply border-red-200;
+    }
+
+    .flash-toast-icon-error {
+        @apply bg-red-50 text-red-600;
+    }
+
+    .flash-toast-title-error {
+        @apply text-red-600;
     }
 
     th,

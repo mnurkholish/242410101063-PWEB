@@ -26,19 +26,26 @@
                 <a class="{{ request()->is('/') ? $activeClass : $linkClass }}" href="{{ url('/') }}">Beranda</a>
             </li>
             <li>
-                <a class="{{ request()->is('tentang') ? $activeClass : $linkClass }}" href="{{ url('/tentang') }}">Tentang</a>
+                <a class="{{ request()->is('tentang') ? $activeClass : $linkClass }}"
+                    href="{{ url('/tentang') }}">Tentang</a>
             </li>
             <li>
-                <a class="{{ request()->is('kontak') ? $activeClass : $linkClass }}" href="{{ route('kontak') }}">Kontak</a>
+                <a class="{{ request()->is('kontak') ? $activeClass : $linkClass }}"
+                    href="{{ route('kontak') }}">Kontak</a>
             </li>
             <li>
                 <a class="{{ $linkClass }}" href="{{ url('/#booking-section') }}">Booking</a>
             </li>
             <li>
+                <a class="{{ request()->is('layanan*') ? $activeClass : $linkClass }}"
+                    href="{{ route('layanan.index') }}">Layanan</a>
+            </li>
+            <li>
                 <a class="{{ $linkClass }}" href="{{ url('/#data-section') }}">Data Booking</a>
             </li>
             <li>
-                <a class="{{ request()->is('dashboard') ? $activeClass : $linkClass }}" href="{{ url('/dashboard') }}">Dashboard</a>
+                <a class="{{ request()->is('dashboard') ? $activeClass : $linkClass }}"
+                    href="{{ url('/dashboard') }}">Dashboard</a>
             </li>
         </ul>
         <a href="{{ url('/#booking-section') }}"

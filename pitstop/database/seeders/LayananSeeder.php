@@ -19,7 +19,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Penggantian oli mesin dan pengecekan dasar kendaraan.',
                 'estimasi_harga' => 350000,
                 'estimasi_durasi' => 30,
-                'gambar' => 'layanan/ganti-oli.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -27,7 +27,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Pemeriksaan rutin kendaraan sesuai jadwal servis.',
                 'estimasi_harga' => 850000,
                 'estimasi_durasi' => 120,
-                'gambar' => 'layanan/servis-berkala.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -35,7 +35,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Penyetelan mesin untuk performa kendaraan lebih optimal.',
                 'estimasi_harga' => 600000,
                 'estimasi_durasi' => 90,
-                'gambar' => 'layanan/tune-up.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -43,7 +43,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Pemeriksaan dan perbaikan sistem pengereman kendaraan.',
                 'estimasi_harga' => 275000,
                 'estimasi_durasi' => 60,
-                'gambar' => 'layanan/perbaikan-rem.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -51,7 +51,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Menyeimbangkan roda dan meluruskan posisi ban kendaraan.',
                 'estimasi_harga' => 450000,
                 'estimasi_durasi' => 60,
-                'gambar' => 'layanan/spooring.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -59,7 +59,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Pembersihan kendaraan bagian luar dan dalam.',
                 'estimasi_harga' => 150000,
                 'estimasi_durasi' => 45,
-                'gambar' => 'layanan/cuci-premium.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -67,7 +67,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Pengecekan mesin menggunakan alat scanner modern.',
                 'estimasi_harga' => 250000,
                 'estimasi_durasi' => 45,
-                'gambar' => 'layanan/diagnosa.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
             [
@@ -75,7 +75,7 @@ class LayananSeeder extends Seeder
                 'deskripsi' => 'Pembersihan dan pengecekan sistem pendingin kendaraan.',
                 'estimasi_harga' => 400000,
                 'estimasi_durasi' => 75,
-                'gambar' => 'layanan/service-ac.jpg',
+                'gambar' => null,
                 'is_active' => true,
             ],
         ];
@@ -83,5 +83,7 @@ class LayananSeeder extends Seeder
         foreach ($layanans as $layanan) {
             Layanan::create($layanan);
         }
+
+        Layanan::factory()->count(1000)->create();
     }
 }
