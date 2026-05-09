@@ -17,7 +17,7 @@
             <div class="grid gap-4 md:grid-cols-3">
                 <x-stat-card judul="Total Layanan" nilai="{{ $totalLayanan }}" ikon="#" warna="blue" />
                 <x-stat-card judul="Layanan Aktif" nilai="{{ $layananAktif }}" ikon="OK" warna="emerald" />
-                <x-stat-card judul="Total Booking" nilai="{{ count($bookings) }}" ikon="!" warna="amber" />
+                <x-stat-card judul="Total Booking" nilai="{{ $totalBooking }}" ikon="!" warna="amber" />
             </div>
 
             <section class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:p-8">

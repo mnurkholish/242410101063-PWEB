@@ -2,15 +2,6 @@
 
 @section('content')
     @php
-        $services = [
-            ['name' => 'Ganti Oli', 'detail' => 'Rp350.000 / 30 menit'],
-            ['name' => 'Servis Berkala', 'detail' => 'Rp850.000 / 120 menit'],
-            ['name' => 'Perbaikan Rem', 'detail' => 'Rp275.000 / 60 menit'],
-            ['name' => 'Tune Up Mesin', 'detail' => 'Rp600.000 / 90 menit'],
-            ['name' => 'Spooring Balancing', 'detail' => 'Rp450.000 / 60 menit'],
-            ['name' => 'Diagnosa Mesin', 'detail' => 'Rp250.000 / 45 menit'],
-        ];
-
         $fieldClass =
             'min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100';
         $labelClass = 'text-sm font-extrabold text-slate-800';
@@ -79,7 +70,8 @@
                             <div class="form-group grid gap-2">
                                 <label class="{{ $labelClass }}" for="namaPelanggan">Nama Pelanggan</label>
                                 <input class="{{ $fieldClass }}" type="text" id="namaPelanggan"
-                                    name="namaPelanggan" placeholder="Masukkan nama pelanggan" autocomplete="off">
+                                    name="namaPelanggan" value="{{ auth()->user()->name ?? '' }}"
+                                    placeholder="Login untuk memakai nama akun" autocomplete="off" @auth readonly @endauth>
                                 <small class="error-message" id="namaPelangganError"></small>
                             </div>
 
@@ -121,25 +113,46 @@
                                     min="08:00" max="17:00">
                                 <small class="error-message" id="jamServiceError"></small>
                             </div>
+
+                            <div class="form-group grid gap-2 md:col-span-2">
+                                <label class="{{ $labelClass }}" for="slot">Slot Bengkel</label>
+                                <select class="{{ $fieldClass }}" id="slot" name="slot">
+                                    <option value="">Pilih slot</option>
+                                    <option value="A">Slot A</option>
+                                    <option value="B">Slot B</option>
+                                    <option value="C">Slot C</option>
+                                </select>
+                                <small class="error-message" id="slotError"></small>
+                                @error('slot')
+                                    <small class="error-message">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="form-group service-group mt-4 grid gap-2" id="serviceGroup">
                             <label class="{{ $labelClass }}">Jenis Service</label>
                             <div class="grid gap-3 md:grid-cols-2">
-                                @foreach ($services as $service)
+                                @forelse ($layanans as $layanan)
                                     <label
                                         class="service-option flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5 transition hover:border-blue-600 hover:bg-blue-50">
                                         <input class="mt-1 h-4.5 w-4.5 accent-blue-600" type="checkbox"
-                                            name="jenisService[]" value="{{ $service['name'] }}">
+                                            name="layanan_id[]" value="{{ $layanan->id }}">
                                         <span class="grid min-w-0 gap-0.5 font-extrabold">
-                                            {{ $service['name'] }}
+                                            {{ $layanan->nama }}
                                             <small
-                                                class="text-xs font-bold text-slate-500">{{ $service['detail'] }}</small>
+                                                class="text-xs font-bold text-slate-500">Rp{{ number_format($layanan->estimasi_harga, 0, ',', '.') }} / {{ $layanan->estimasi_durasi }} menit</small>
                                         </span>
                                     </label>
-                                @endforeach
+                                @empty
+                                    <p class="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-bold text-slate-500">
+                                        Belum ada layanan aktif.
+                                    </p>
+                                @endforelse
                             </div>
                             <small class="error-message" id="jenisServiceError"></small>
+                            @error('layanan_id')
+                                <small class="error-message">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="mt-5 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-2">
@@ -201,8 +214,8 @@
                                 <label class="{{ $labelClass }}" for="filterService">Filter Service</label>
                                 <select class="{{ $fieldClass }}" id="filterService">
                                     <option value="Semua">Semua Service</option>
-                                    @foreach ($services as $service)
-                                        <option value="{{ $service['name'] }}">{{ $service['name'] }}</option>
+                                    @foreach ($layanans as $layanan)
+                                        <option value="{{ $layanan->id }}">{{ $layanan->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -243,6 +256,16 @@
 
 @push('scripts')
     <script>
+        window.PitStopServices = @json(
+            $layanans->mapWithKeys(fn ($layanan) => [
+                (string) $layanan->id => [
+                    'name' => $layanan->nama,
+                    'price' => $layanan->estimasi_harga,
+                    'duration' => $layanan->estimasi_durasi,
+                ],
+            ])
+        );
+        window.PitStopInitialBookings = @json($bookings);
         window.PitStopPage = {
             name: 'beranda',
         };

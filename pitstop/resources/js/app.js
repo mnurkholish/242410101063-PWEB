@@ -1,6 +1,6 @@
 const STORAGE_KEY = "pitstopBookings";
 
-const services = {
+const services = window.PitStopServices ?? {
   "Ganti Oli": { price: 350000, duration: 30 },
   "Servis Berkala": { price: 850000, duration: 120 },
   "Perbaikan Rem": { price: 275000, duration: 60 },
@@ -8,51 +8,6 @@ const services = {
   "Spooring Balancing": { price: 450000, duration: 60 },
   "Diagnosa Mesin": { price: 250000, duration: 45 },
 };
-
-const defaultBookings = [
-  {
-    id: "booking-1",
-    kodeBooking: "PS-001",
-    namaPelanggan: "Budi Santoso",
-    nomorPlat: "B 1234 XYZ",
-    jenisKendaraan: "Mobil",
-    merekKendaraan: "Toyota Avanza 2021",
-    jenisService: ["Ganti Oli", "Diagnosa Mesin"],
-    tanggalService: "2026-04-22",
-    jamService: "09:00",
-    estimasiBiaya: 600000,
-    estimasiDurasi: 75,
-    statusBooking: "Diproses",
-  },
-  {
-    id: "booking-2",
-    kodeBooking: "PS-002",
-    namaPelanggan: "Siti Aminah",
-    nomorPlat: "D 5678 ABC",
-    jenisKendaraan: "SUV",
-    merekKendaraan: "Honda HR-V 2020",
-    jenisService: ["Servis Berkala"],
-    tanggalService: "2026-04-22",
-    jamService: "11:00",
-    estimasiBiaya: 850000,
-    estimasiDurasi: 120,
-    statusBooking: "Menunggu",
-  },
-  {
-    id: "booking-3",
-    kodeBooking: "PS-003",
-    namaPelanggan: "Raka Pratama",
-    nomorPlat: "F 9012 IJ",
-    jenisKendaraan: "Motor",
-    merekKendaraan: "Yamaha NMAX 2022",
-    jenisService: ["Perbaikan Rem", "Ganti Oli"],
-    tanggalService: "2026-04-23",
-    jamService: "13:00",
-    estimasiBiaya: 625000,
-    estimasiDurasi: 90,
-    statusBooking: "Selesai",
-  },
-];
 
 let bookings = [];
 
@@ -69,7 +24,7 @@ const formTitle = document.querySelector("#formTitle");
 const formModeLabel = document.querySelector("#formModeLabel");
 const formFeedback = document.querySelector("#formFeedback");
 const serviceGroup = document.querySelector("#serviceGroup");
-const serviceInputs = [...document.querySelectorAll('input[name="jenisService[]"]')];
+const serviceInputs = [...document.querySelectorAll('input[name="layanan_id[]"]')];
 
 const fields = {
   bookingId: document.querySelector("#bookingId"),
@@ -79,6 +34,7 @@ const fields = {
   merekKendaraan: document.querySelector("#merekKendaraan"),
   tanggalService: document.querySelector("#tanggalService"),
   jamService: document.querySelector("#jamService"),
+  slot: document.querySelector("#slot"),
 };
 
 const errors = {
@@ -88,6 +44,7 @@ const errors = {
   merekKendaraan: document.querySelector("#merekKendaraanError"),
   tanggalService: document.querySelector("#tanggalServiceError"),
   jamService: document.querySelector("#jamServiceError"),
+  slot: document.querySelector("#slotError"),
   jenisService: document.querySelector("#jenisServiceError"),
 };
 
@@ -169,38 +126,33 @@ const getSelectedServices = () =>
 const calculateSummary = (selectedServices) =>
   selectedServices.reduce(
     (summary, serviceName) => ({
-      price: summary.price + services[serviceName].price,
-      duration: summary.duration + services[serviceName].duration,
+      price: summary.price + (services[serviceName]?.price || 0),
+      duration: summary.duration + (services[serviceName]?.duration || 0),
     }),
     { price: 0, duration: 0 },
   );
 
-const saveToStorage = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+const getServiceName = (serviceKey) => services[serviceKey]?.name || serviceKey;
+
+const getServiceKey = (serviceValue) => {
+  if (services[serviceValue]) {
+    return serviceValue;
+  }
+
+  return Object.keys(services).find((key) => services[key]?.name === serviceValue) || serviceValue;
 };
 
+const saveToStorage = () => {};
+
 const loadFromStorage = () => {
-  const storedData = localStorage.getItem(STORAGE_KEY);
-
-  if (!storedData) {
-    bookings = [...defaultBookings];
-    saveToStorage();
-    return;
-  }
-
-  try {
-    const parsedData = JSON.parse(storedData);
-    bookings = Array.isArray(parsedData) ? parsedData.map(normalizeBooking) : [...defaultBookings];
-  } catch (error) {
-    bookings = [...defaultBookings];
-    saveToStorage();
-  }
+  const initialBookings = Array.isArray(window.PitStopInitialBookings) ? window.PitStopInitialBookings : [];
+  bookings = initialBookings.map(normalizeBooking);
 };
 
 const normalizeBooking = (booking, index) => {
   const selectedServices = Array.isArray(booking.jenisService)
-    ? booking.jenisService.filter((serviceName) => services[serviceName])
-    : [booking.jenisService].filter((serviceName) => services[serviceName]);
+    ? booking.jenisService.map(getServiceKey).filter((serviceName) => services[serviceName])
+    : [booking.jenisService].map(getServiceKey).filter((serviceName) => services[serviceName]);
   const summary = calculateSummary(selectedServices);
 
   return {
@@ -230,6 +182,10 @@ const clearFeedback = () => {
 };
 
 const setFieldError = (fieldName, message = "") => {
+  if (!errors[fieldName]) {
+    return;
+  }
+
   errors[fieldName].textContent = message;
 
   if (fieldName === "jenisService") {
@@ -298,6 +254,7 @@ const getFormData = () => {
     nomorPlat: fields.nomorPlat.value.trim().toUpperCase(),
     jenisKendaraan: fields.jenisKendaraan.value,
     merekKendaraan: fields.merekKendaraan.value.trim(),
+    slot: fields.slot.value,
     jenisService: selectedServices,
     tanggalService: fields.tanggalService.value,
     jamService: fields.jamService.value,
@@ -351,6 +308,10 @@ const validateBooking = (booking) => {
     validationErrors.jamService = "Jam kedatangan wajib diisi.";
   } else if (booking.jamService < "08:00" || booking.jamService > "17:00") {
     validationErrors.jamService = "Jam service hanya 08:00 sampai 17:00.";
+  }
+
+  if (!booking.slot) {
+    validationErrors.slot = "Slot bengkel wajib dipilih.";
   }
 
   if (!booking.jenisService.length) {
@@ -448,7 +409,7 @@ const renderTable = () => {
             <div class="muted">${booking.merekKendaraan}</div>
           </td>
           <td data-label="Service">
-            ${booking.jenisService.join(", ")}
+            ${booking.jenisService.map(getServiceName).join(", ")}
             <div class="muted">${formatDuration(booking.estimasiDurasi)}</div>
           </td>
           <td data-label="Jadwal">
@@ -522,6 +483,7 @@ const editBooking = (booking) => {
   fields.merekKendaraan.value = booking.merekKendaraan;
   fields.tanggalService.value = booking.tanggalService;
   fields.jamService.value = booking.jamService;
+  fields.slot.value = booking.slot || "";
 
   serviceInputs.forEach((input) => {
     input.checked = booking.jenisService.includes(input.value);

@@ -4,10 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Layanan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
+    public function home()
+    {
+        return view('index', [
+            'layanans' => Layanan::aktif()->orderBy('nama')->get(),
+            'bookings' => auth()->check() && ! auth()->user()->isAdmin()
+                ? $this->userBookings()
+                : [],
+        ]);
+    }
+
     public function index()
     {
         return view('dashboard', [
@@ -27,27 +40,59 @@ class DashboardController extends Controller
         return view('admin.dashboard', [
             'totalLayanan' => Layanan::count(),
             'layananAktif' => Layanan::where('is_active', true)->count(),
-            'bookings' => $this->dummyBookings(),
+            'totalBooking' => Booking::count(),
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'namaPelanggan' => ['required', 'string', 'min:3'],
             'nomorPlat' => ['required', 'string'],
             'jenisKendaraan' => ['required', 'string'],
             'merekKendaraan' => ['required', 'string'],
             'tanggalService' => ['required', 'date'],
-            'jamService' => ['required'],
-            'jenisService' => ['required', 'array', 'min:1'],
+            'jamService' => ['required', 'date_format:H:i'],
+            'slot' => ['required', Rule::in(['A', 'B', 'C'])],
+            'layanan_id' => ['required', 'array', 'min:1'],
+            'layanan_id.*' => ['integer', 'exists:layanans,id'],
         ]);
 
-        $kodeBooking = $request->input('kodeBooking', 'booking baru');
+        $layanans = Layanan::query()
+            ->aktif()
+            ->whereIn('id', $validated['layanan_id'])
+            ->get();
+
+        if ($layanans->count() !== count(array_unique($validated['layanan_id']))) {
+            return back()
+                ->withErrors(['layanan_id' => 'Pilih layanan yang masih aktif.'])
+                ->withInput();
+        }
+
+        $startTime = Carbon::parse($validated['tanggalService'].' '.$validated['jamService']);
+        $totalDurasi = $layanans->sum('estimasi_durasi');
+
+        $booking = DB::transaction(function () use ($validated, $layanans, $startTime, $totalDurasi): Booking {
+            $booking = Booking::create([
+                'user_id' => auth()->id(),
+                'slot' => $validated['slot'],
+                'start_time' => $startTime,
+                'end_time' => $startTime->copy()->addMinutes($totalDurasi),
+                'jenis_kendaraan' => $validated['jenisKendaraan'],
+                'merek_kendaraan' => $validated['merekKendaraan'],
+                'nomor_plat' => strtoupper($validated['nomorPlat']),
+                'total_estimasi_harga' => $layanans->sum('estimasi_harga'),
+                'total_estimasi_durasi' => $totalDurasi,
+                'status' => 'pending',
+            ]);
+
+            $booking->layanans()->attach($layanans->pluck('id'));
+
+            return $booking;
+        });
 
         return redirect()
             ->route('dashboard')
-            ->with('success', "Booking {$kodeBooking} berhasil disimpan.");
+            ->with('success', 'Booking PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT).' berhasil disimpan.');
     }
 
     private function userBookings(): array
@@ -83,48 +128,4 @@ class DashboardController extends Controller
         };
     }
 
-    private function dummyBookings(): array
-    {
-        return [
-            [
-                'kodeBooking' => 'PS-001',
-                'namaPelanggan' => 'Budi Santoso',
-                'nomorPlat' => 'B 1234 XYZ',
-                'jenisKendaraan' => 'Mobil',
-                'merekKendaraan' => 'Toyota Avanza 2021',
-                'jenisService' => ['Ganti Oli', 'Diagnosa Mesin'],
-                'tanggalService' => '2026-04-22',
-                'jamService' => '09:00',
-                'estimasiBiaya' => 600000,
-                'estimasiDurasi' => 75,
-                'statusBooking' => 'Diproses',
-            ],
-            [
-                'kodeBooking' => 'PS-002',
-                'namaPelanggan' => 'Siti Aminah',
-                'nomorPlat' => 'D 5678 ABC',
-                'jenisKendaraan' => 'SUV',
-                'merekKendaraan' => 'Honda HR-V 2020',
-                'jenisService' => ['Servis Berkala'],
-                'tanggalService' => '2026-04-22',
-                'jamService' => '11:00',
-                'estimasiBiaya' => 850000,
-                'estimasiDurasi' => 120,
-                'statusBooking' => 'Menunggu',
-            ],
-            [
-                'kodeBooking' => 'PS-003',
-                'namaPelanggan' => 'Raka Pratama',
-                'nomorPlat' => 'F 9012 IJ',
-                'jenisKendaraan' => 'Motor',
-                'merekKendaraan' => 'Yamaha NMAX 2022',
-                'jenisService' => ['Perbaikan Rem', 'Ganti Oli'],
-                'tanggalService' => '2026-04-23',
-                'jamService' => '13:00',
-                'estimasiBiaya' => 625000,
-                'estimasiDurasi' => 90,
-                'statusBooking' => 'Selesai',
-            ],
-        ];
-    }
 }

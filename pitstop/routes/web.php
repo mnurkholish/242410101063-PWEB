@@ -5,7 +5,7 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'index')->name('home');
+Route::get('/', [DashboardController::class, 'home'])->name('home');
 Route::view('/tentang', 'tentang')->name('tentang');
 Route::view('/kontak', 'kontak')->name('kontak');
 
