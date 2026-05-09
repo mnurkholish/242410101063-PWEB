@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Tambah Layanan - PitStop')
+@section('page-title', 'Tambah Layanan')
 
 @section('content')
     @php

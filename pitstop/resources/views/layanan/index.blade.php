@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends(request()->routeIs('admin.*') ? 'layouts.admin' : 'layouts.app')
 
 @section('title', 'Data Layanan - PitStop')
+@section('page-title', 'Kelola Layanan')
 
 @section('content')
     @php

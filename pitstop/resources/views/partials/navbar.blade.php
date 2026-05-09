@@ -34,40 +34,44 @@
                     href="{{ route('kontak') }}">Kontak</a>
             </li>
             <li>
-                <a class="{{ $linkClass }}" href="{{ url('/#booking-section') }}">Booking</a>
-            </li>
-            <li>
                 <a class="{{ request()->is('layanan*') ? $activeClass : $linkClass }}"
                     href="{{ route('layanan.index') }}">Layanan</a>
             </li>
-            <li>
-                <a class="{{ $linkClass }}" href="{{ url('/#data-section') }}">Data Booking</a>
-            </li>
             @auth
-                <li>
-                    <a class="{{ request()->is('dashboard') || request()->is('admin/dashboard') ? $activeClass : $linkClass }}"
-                        href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}">Dashboard</a>
-                </li>
+                @unless (Auth::user()->isAdmin())
+                    <li>
+                        <a class="{{ $linkClass }}" href="{{ url('/#booking-section') }}">Booking</a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('bookings.*') ? $activeClass : $linkClass }}"
+                            href="{{ route('bookings.index') }}">Data Booking</a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('dashboard') ? $activeClass : $linkClass }}"
+                            href="{{ route('dashboard') }}">Dashboard</a>
+                    </li>
+                @endunless
             @endauth
             @guest
                 <li>
                     <a class="{{ request()->is('login') ? $activeClass : $linkClass }}" href="{{ route('login') }}">Login</a>
                 </li>
+                <li>
+                    <a class="{{ request()->is('register') ? $activeClass : $linkClass }}"
+                        href="{{ route('register') }}">Register</a>
+                </li>
             @endguest
         </ul>
         @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit"
-                    class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                    Logout
-                </button>
-            </form>
-        @else
-            <a href="{{ route('register') }}"
-                class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                Daftar
-            </a>
+            @unless (Auth::user()->isAdmin())
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
+                        Logout
+                    </button>
+                </form>
+            @endunless
         @endauth
     </nav>
 </header>

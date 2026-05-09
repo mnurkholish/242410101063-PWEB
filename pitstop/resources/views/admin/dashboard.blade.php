@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard Admin - PitStop')
+@section('page-title', 'Dashboard')
 
 @section('content')
     <section class="px-[5%] py-10">

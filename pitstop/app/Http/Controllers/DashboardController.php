@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Layanan;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,14 @@ class DashboardController extends Controller
     public function index()
     {
         return view('dashboard', [
-            'bookings' => $this->dummyBookings(),
+            'bookings' => $this->userBookings(),
+        ]);
+    }
+
+    public function bookings()
+    {
+        return view('bookings.index', [
+            'bookings' => $this->userBookings(),
         ]);
     }
 
@@ -40,6 +48,39 @@ class DashboardController extends Controller
         return redirect()
             ->route('dashboard')
             ->with('success', "Booking {$kodeBooking} berhasil disimpan.");
+    }
+
+    private function userBookings(): array
+    {
+        return Booking::query()
+            ->with(['layanans', 'user'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get()
+            ->map(fn (Booking $booking): array => [
+                'kodeBooking' => 'PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT),
+                'namaPelanggan' => $booking->user?->name ?? auth()->user()?->name,
+                'nomorPlat' => $booking->nomor_plat,
+                'jenisKendaraan' => $booking->jenis_kendaraan,
+                'merekKendaraan' => $booking->merek_kendaraan,
+                'jenisService' => $booking->layanans->pluck('nama')->all(),
+                'tanggalService' => $booking->start_time?->format('Y-m-d'),
+                'jamService' => $booking->start_time?->format('H:i'),
+                'estimasiBiaya' => $booking->total_estimasi_harga,
+                'estimasiDurasi' => $booking->total_estimasi_durasi,
+                'statusBooking' => $this->statusLabel($booking->status),
+            ])
+            ->all();
+    }
+
+    private function statusLabel(string $status): string
+    {
+        return match ($status) {
+            'diproses' => 'Diproses',
+            'selesai' => 'Selesai',
+            'dibatalkan' => 'Dibatalkan',
+            default => 'Menunggu',
+        };
     }
 
     private function dummyBookings(): array
