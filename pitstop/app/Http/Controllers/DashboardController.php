@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Layanan;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -9,6 +10,15 @@ class DashboardController extends Controller
     public function index()
     {
         return view('dashboard', [
+            'bookings' => $this->dummyBookings(),
+        ]);
+    }
+
+    public function admin()
+    {
+        return view('admin.dashboard', [
+            'totalLayanan' => Layanan::count(),
+            'layananAktif' => Layanan::where('is_active', true)->count(),
             'bookings' => $this->dummyBookings(),
         ]);
     }

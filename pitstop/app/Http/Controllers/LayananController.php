@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Layanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class LayananController extends Controller
 {
@@ -41,7 +41,7 @@ class LayananController extends Controller
         Layanan::create($validated);
 
         return redirect()
-            ->route('layanan.index')
+            ->route('admin.layanan.index')
             ->with('success', 'Layanan berhasil ditambahkan.');
     }
 
@@ -78,7 +78,7 @@ class LayananController extends Controller
         $layanan->update($validated);
 
         return redirect()
-            ->route('layanan.index')
+            ->route('admin.layanan.index')
             ->with('success', 'Layanan berhasil diperbarui.');
     }
 
@@ -92,7 +92,7 @@ class LayananController extends Controller
         $layanan->delete();
 
         return redirect()
-            ->route('layanan.index')
+            ->route('admin.layanan.index')
             ->with('success', 'Layanan berhasil dihapus.');
     }
 
@@ -118,15 +118,15 @@ class LayananController extends Controller
     private function uploadGambar(Request $request): string
     {
         $file = $request->file('gambar');
-        $filename = Str::uuid() . '.' . $file->extension();
+        $filename = Str::uuid().'.'.$file->extension();
         $directory = storage_path('app/public/layanan');
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
         $file->move($directory, $filename);
 
-        return 'layanan/' . $filename;
+        return 'layanan/'.$filename;
     }
 }

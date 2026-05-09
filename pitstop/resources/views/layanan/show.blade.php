@@ -4,6 +4,8 @@
 
 @section('content')
     @php
+        $isAdminArea = request()->routeIs('admin.*');
+        $routePrefix = $isAdminArea ? 'admin.' : '';
         $buttonClass =
             'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
         $gambarUrl =
@@ -20,11 +22,13 @@
                     <h1 class="mt-1 text-3xl font-black leading-tight text-slate-800">{{ $layanan->nama }}</h1>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('layanan.edit', $layanan) }}"
-                        class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                        Edit Layanan
-                    </a>
-                    <a href="{{ route('layanan.index') }}"
+                    @if ($isAdminArea)
+                        <a href="{{ route('admin.layanan.edit', $layanan) }}"
+                            class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
+                            Edit Layanan
+                        </a>
+                    @endif
+                    <a href="{{ route($routePrefix . 'layanan.index') }}"
                         class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300">
                         Kembali
                     </a>
@@ -63,12 +67,14 @@
                         </div>
                     </div>
 
-                    <form class="formHapusLayanan" action="{{ route('layanan.destroy', $layanan) }}" method="POST"
-                        data-nama="{{ $layanan->nama }}">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn-action btn-delete" type="submit">Hapus Layanan</button>
-                    </form>
+                    @if ($isAdminArea)
+                        <form class="formHapusLayanan" action="{{ route('admin.layanan.destroy', $layanan) }}" method="POST"
+                            data-nama="{{ $layanan->nama }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn-action btn-delete" type="submit">Hapus Layanan</button>
+                        </form>
+                    @endif
                 </div>
             </section>
         </div>

@@ -43,14 +43,31 @@
             <li>
                 <a class="{{ $linkClass }}" href="{{ url('/#data-section') }}">Data Booking</a>
             </li>
-            <li>
-                <a class="{{ request()->is('dashboard') ? $activeClass : $linkClass }}"
-                    href="{{ url('/dashboard') }}">Dashboard</a>
-            </li>
+            @auth
+                <li>
+                    <a class="{{ request()->is('dashboard') || request()->is('admin/dashboard') ? $activeClass : $linkClass }}"
+                        href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}">Dashboard</a>
+                </li>
+            @endauth
+            @guest
+                <li>
+                    <a class="{{ request()->is('login') ? $activeClass : $linkClass }}" href="{{ route('login') }}">Login</a>
+                </li>
+            @endguest
         </ul>
-        <a href="{{ url('/#booking-section') }}"
-            class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-            Buat Jadwal
-        </a>
+        @auth
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
+                    Logout
+                </button>
+            </form>
+        @else
+            <a href="{{ route('register') }}"
+                class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
+                Daftar
+            </a>
+        @endauth
     </nav>
 </header>

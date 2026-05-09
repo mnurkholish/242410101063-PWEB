@@ -4,6 +4,8 @@
 
 @section('content')
     @php
+        $isAdminArea = request()->routeIs('admin.*');
+        $routePrefix = $isAdminArea ? 'admin.' : '';
         $buttonClass =
             'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
     @endphp
@@ -18,10 +20,12 @@
                         Kelola nama layanan, estimasi harga, durasi pengerjaan, gambar, dan status aktif.
                     </p>
                 </div>
-                <a href="{{ route('layanan.create') }}"
-                    class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
-                    Tambah Layanan
-                </a>
+                @if ($isAdminArea)
+                    <a href="{{ route('admin.layanan.create') }}"
+                        class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
+                        Tambah Layanan
+                    </a>
+                @endif
             </div>
 
             <section
@@ -73,16 +77,18 @@
                                         <div
                                             class="action-group flex flex-wrap md:flex-nowrap items-center justify-center gap-2">
                                             <a class="btn-action btn-edit"
-                                                href="{{ route('layanan.show', $layanan) }}">Detail</a>
-                                            <a class="btn-action btn-status"
-                                                href="{{ route('layanan.edit', $layanan) }}">Edit</a>
-                                            <form class="formHapusLayanan"
-                                                action="{{ route('layanan.destroy', $layanan) }}" method="POST"
-                                                data-nama="{{ $layanan->nama }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn-action btn-delete" type="submit">Hapus</button>
-                                            </form>
+                                                href="{{ route($routePrefix . 'layanan.show', $layanan) }}">Detail</a>
+                                            @if ($isAdminArea)
+                                                <a class="btn-action btn-status"
+                                                    href="{{ route('admin.layanan.edit', $layanan) }}">Edit</a>
+                                                <form class="formHapusLayanan"
+                                                    action="{{ route('admin.layanan.destroy', $layanan) }}" method="POST"
+                                                    data-nama="{{ $layanan->nama }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn-action btn-delete" type="submit">Hapus</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

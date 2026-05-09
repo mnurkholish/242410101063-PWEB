@@ -17,7 +17,7 @@
 
             <section
                 class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:p-8">
-                <form action="{{ route('layanan.update', $layanan) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.layanan.update', $layanan) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     @include('layanan._form', ['layanan' => $layanan])
@@ -27,7 +27,7 @@
                             class="{{ $buttonClass }} bg-blue-600 text-white shadow-[0_12px_24px_rgba(23,105,224,0.22)] hover:bg-blue-950">
                             Simpan Perubahan
                         </button>
-                        <a href="{{ route('layanan.index') }}"
+                        <a href="{{ route('admin.layanan.index') }}"
                             class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300">
                             Kembali
                         </a>
