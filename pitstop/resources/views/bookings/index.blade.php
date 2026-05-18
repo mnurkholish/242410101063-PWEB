@@ -24,7 +24,7 @@
                         <input
                             class="min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100"
                             type="search" id="bookingSearchInput" name="keyword"
-                            placeholder="Kode, plat, kendaraan, layanan, atau status" autocomplete="off">
+                            placeholder="Kode, plat, layanan, atau status" autocomplete="off">
                     </div>
                     <button
                         class="self-end inline-flex min-h-[46px] items-center justify-center rounded-lg border-0 bg-blue-600 px-4 py-3 text-center font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-blue-950"

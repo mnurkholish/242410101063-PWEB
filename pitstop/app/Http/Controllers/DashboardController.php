@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Layanan;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -28,24 +24,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function bookings()
-    {
-        return view('bookings.index', [
-            'bookings' => $this->userBookings(),
-        ]);
-    }
-
-    public function searchBookings(Request $request)
-    {
-        $validated = $request->validate([
-            'keyword' => ['nullable', 'string', 'max:80'],
-        ]);
-
-        return response()->json([
-            'bookings' => $this->userBookings($validated['keyword'] ?? ''),
-        ]);
-    }
-
     public function admin()
     {
         return view('admin.dashboard', [
@@ -55,89 +33,11 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    private function userBookings(): array
     {
-        $validated = $request->validate([
-            'nomorPlat' => ['required', 'string'],
-            'jenisKendaraan' => ['required', 'string'],
-            'merekKendaraan' => ['required', 'string'],
-            'tanggalService' => ['required', 'date'],
-            'jamService' => ['required', 'date_format:H:i'],
-            'slot' => ['required', Rule::in(['A', 'B', 'C'])],
-            'layanan_id' => ['required', 'array', 'min:1'],
-            'layanan_id.*' => ['integer', 'exists:layanans,id'],
-        ]);
-
-        $layanans = Layanan::query()
-            ->aktif()
-            ->whereIn('id', $validated['layanan_id'])
-            ->get();
-
-        if ($layanans->count() !== count(array_unique($validated['layanan_id']))) {
-            return back()
-                ->withErrors(['layanan_id' => 'Pilih layanan yang masih aktif.'])
-                ->withInput();
-        }
-
-        $startTime = Carbon::parse($validated['tanggalService'].' '.$validated['jamService']);
-        $totalDurasi = $layanans->sum('estimasi_durasi');
-
-        $booking = DB::transaction(function () use ($validated, $layanans, $startTime, $totalDurasi): Booking {
-            $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'slot' => $validated['slot'],
-                'start_time' => $startTime,
-                'end_time' => $startTime->copy()->addMinutes($totalDurasi),
-                'jenis_kendaraan' => $validated['jenisKendaraan'],
-                'merek_kendaraan' => $validated['merekKendaraan'],
-                'nomor_plat' => strtoupper($validated['nomorPlat']),
-                'total_estimasi_harga' => $layanans->sum('estimasi_harga'),
-                'total_estimasi_durasi' => $totalDurasi,
-                'status' => 'pending',
-            ]);
-
-            $booking->layanans()->attach($layanans->pluck('id'));
-
-            return $booking;
-        });
-
-        return redirect()
-            ->route('dashboard')
-            ->with('success', 'Booking PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT).' berhasil disimpan.');
-    }
-
-    private function userBookings(string $keyword = ''): array
-    {
-        $keyword = trim($keyword);
-
         return Booking::query()
             ->with(['layanans', 'user'])
             ->where('user_id', auth()->id())
-            ->when($keyword !== '', function ($query) use ($keyword) {
-                $numericKeyword = preg_replace('/\D/', '', $keyword);
-                $statusKeyword = match (strtolower($keyword)) {
-                    'menunggu' => 'pending',
-                    'diproses' => 'diproses',
-                    'selesai' => 'selesai',
-                    'dibatalkan' => 'dibatalkan',
-                    default => $keyword,
-                };
-
-                $query->where(function ($query) use ($keyword, $numericKeyword, $statusKeyword) {
-                    $query
-                        ->where('nomor_plat', 'like', "%{$keyword}%")
-                        ->orWhere('jenis_kendaraan', 'like', "%{$keyword}%")
-                        ->orWhere('merek_kendaraan', 'like', "%{$keyword}%")
-                        ->orWhere('status', 'like', "%{$statusKeyword}%")
-                        ->orWhereHas('layanans', function ($query) use ($keyword) {
-                            $query->where('nama', 'like', "%{$keyword}%");
-                        });
-
-                    if ($numericKeyword !== '') {
-                        $query->orWhere('id', (int) $numericKeyword);
-                    }
-                });
-            })
             ->latest()
             ->get()
             ->map(fn (Booking $booking): array => [

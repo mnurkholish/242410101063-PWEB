@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ProfileController;
@@ -11,9 +12,9 @@ Route::view('/kontak', 'kontak')->name('kontak');
 
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/bookings', [DashboardController::class, 'bookings'])->name('bookings.index');
-    Route::post('/bookings/search', [DashboardController::class, 'searchBookings'])->name('bookings.search');
-    Route::post('/dashboard/bookings', [DashboardController::class, 'store'])->name('dashboard.bookings.store');
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::post('/bookings/search', [BookingController::class, 'search'])->name('bookings.search');
+    Route::post('/dashboard/bookings', [BookingController::class, 'store'])->name('dashboard.bookings.store');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin'])
