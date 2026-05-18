@@ -12,6 +12,7 @@ Route::view('/kontak', 'kontak')->name('kontak');
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [DashboardController::class, 'bookings'])->name('bookings.index');
+    Route::post('/bookings/search', [DashboardController::class, 'searchBookings'])->name('bookings.search');
     Route::post('/dashboard/bookings', [DashboardController::class, 'store'])->name('dashboard.bookings.store');
 });
 

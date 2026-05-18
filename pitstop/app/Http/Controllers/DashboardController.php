@@ -35,6 +35,17 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function searchBookings(Request $request)
+    {
+        $validated = $request->validate([
+            'keyword' => ['nullable', 'string', 'max:80'],
+        ]);
+
+        return response()->json([
+            'bookings' => $this->userBookings($validated['keyword'] ?? ''),
+        ]);
+    }
+
     public function admin()
     {
         return view('admin.dashboard', [
@@ -95,11 +106,38 @@ class DashboardController extends Controller
             ->with('success', 'Booking PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT).' berhasil disimpan.');
     }
 
-    private function userBookings(): array
+    private function userBookings(string $keyword = ''): array
     {
+        $keyword = trim($keyword);
+
         return Booking::query()
             ->with(['layanans', 'user'])
             ->where('user_id', auth()->id())
+            ->when($keyword !== '', function ($query) use ($keyword) {
+                $numericKeyword = preg_replace('/\D/', '', $keyword);
+                $statusKeyword = match (strtolower($keyword)) {
+                    'menunggu' => 'pending',
+                    'diproses' => 'diproses',
+                    'selesai' => 'selesai',
+                    'dibatalkan' => 'dibatalkan',
+                    default => $keyword,
+                };
+
+                $query->where(function ($query) use ($keyword, $numericKeyword, $statusKeyword) {
+                    $query
+                        ->where('nomor_plat', 'like', "%{$keyword}%")
+                        ->orWhere('jenis_kendaraan', 'like', "%{$keyword}%")
+                        ->orWhere('merek_kendaraan', 'like', "%{$keyword}%")
+                        ->orWhere('status', 'like', "%{$statusKeyword}%")
+                        ->orWhereHas('layanans', function ($query) use ($keyword) {
+                            $query->where('nama', 'like', "%{$keyword}%");
+                        });
+
+                    if ($numericKeyword !== '') {
+                        $query->orWhere('id', (int) $numericKeyword);
+                    }
+                });
+            })
             ->latest()
             ->get()
             ->map(fn (Booking $booking): array => [
