@@ -54,7 +54,8 @@
             @endauth
             @guest
                 <li>
-                    <a class="{{ request()->is('login') ? $activeClass : $linkClass }}" href="{{ route('login') }}">Login</a>
+                    <a class="{{ request()->is('login') ? $activeClass : $linkClass }}"
+                        href="{{ route('login') }}">Login</a>
                 </li>
                 <li>
                     <a class="{{ request()->is('register') ? $activeClass : $linkClass }}"
@@ -62,11 +63,18 @@
                 </li>
             @endguest
         </ul>
-        <button type="button" data-theme-toggle data-theme-cookie="pitstop_theme"
-            class="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 bg-white text-lg text-blue-950 transition hover:-translate-y-0.5 hover:border-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-500"
-            aria-label="Aktifkan dark mode" aria-pressed="false">
-            <span data-theme-toggle-icon aria-hidden="true">☾</span>
-        </button>
+        <div
+            class="inline-flex h-11 overflow-hidden rounded-lg border border-slate-200 bg-white text-blue-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <a class="grid min-w-11 place-items-center border-r border-slate-200 px-3 text-sm font-extrabold transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                href="{{ route('preferensi') }}" aria-label="Buka preferensi">
+                Pref
+            </a>
+            <button type="button" data-theme-toggle data-theme-cookie="pitstop_theme"
+                class="grid w-11 place-items-center text-lg transition hover:bg-slate-50 dark:hover:bg-slate-800"
+                aria-label="Aktifkan dark mode" aria-pressed="false">
+                <span data-theme-toggle-icon aria-hidden="true">☾</span>
+            </button>
+        </div>
         @auth
             @unless (Auth::user()->isAdmin())
                 <form method="POST" action="{{ route('logout') }}">
@@ -96,7 +104,8 @@
 
                 buttons.forEach((button) => {
                     button.setAttribute('aria-pressed', String(isDark));
-                    button.setAttribute('aria-label', isDark ? 'Aktifkan light mode' : 'Aktifkan dark mode');
+                    button.setAttribute('aria-label', isDark ? 'Aktifkan light mode' :
+                        'Aktifkan dark mode');
 
                     const icon = button.querySelector('[data-theme-toggle-icon]');
 
