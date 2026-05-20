@@ -9,14 +9,29 @@
 
         <script>
             (() => {
-                const themeCookie = 'pitstop_theme';
-                const target = `${encodeURIComponent(themeCookie)}=`;
-                const storedTheme = document.cookie
-                    .split('; ')
-                    .find((item) => item.startsWith(target))
-                    ?.slice(target.length);
+                const getCookieValue = (name) => {
+                    const target = `${encodeURIComponent(name)}=`;
+                    const value = document.cookie
+                        .split('; ')
+                        .find((item) => item.startsWith(target))
+                        ?.slice(target.length);
 
-                document.documentElement.classList.toggle('dark', decodeURIComponent(storedTheme || '') === 'dark');
+                    return decodeURIComponent(value || '');
+                };
+
+                const theme = getCookieValue('pitstop_theme') || 'light';
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const shouldUseDark = theme === 'dark' || (theme === 'system' && systemDark);
+
+                const fontSizes = {
+                    small: '15px',
+                    normal: '16px',
+                    large: '18px',
+                };
+                const fontSize = getCookieValue('pitstop_font_size') || 'normal';
+
+                document.documentElement.classList.toggle('dark', shouldUseDark);
+                document.documentElement.style.fontSize = fontSizes[fontSize] || fontSizes.normal;
             })();
         </script>
 

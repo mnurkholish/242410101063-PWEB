@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,7 @@ Route::get('/', [DashboardController::class, 'home'])->name('home');
 Route::view('/tentang', 'tentang')->name('tentang');
 Route::view('/kontak', 'kontak')->name('kontak');
 Route::view('/preferensi', 'preferensi')->name('preferensi');
+Route::post('/preferensi', [PreferenceController::class, 'store'])->name('preferensi.store');
 
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

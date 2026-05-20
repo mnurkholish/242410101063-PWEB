@@ -115,6 +115,13 @@
                 });
             };
 
+            const shouldUseDarkTheme = (theme) => {
+                return theme === 'dark' || (
+                    theme === 'system' &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches
+                );
+            };
+
             const applyStoredTheme = () => {
                 const themeCookie = buttons[0]?.dataset.themeCookie;
 
@@ -122,7 +129,7 @@
                     return;
                 }
 
-                document.documentElement.classList.toggle('dark', cookie.getCookie(themeCookie) === 'dark');
+                document.documentElement.classList.toggle('dark', shouldUseDarkTheme(cookie.getCookie(themeCookie)));
                 updateThemeToggleButtons();
             };
 
