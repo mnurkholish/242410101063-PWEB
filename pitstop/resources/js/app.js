@@ -1,5 +1,65 @@
 const STORAGE_KEY = "pitstopBookings";
 
+const setCookie = (name, value, days = 365) => {
+  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+};
+
+const getCookie = (name) => {
+  const target = `${encodeURIComponent(name)}=`;
+  const cookies = document.cookie.split("; ");
+  const cookie = cookies.find((item) => item.startsWith(target));
+
+  return cookie ? decodeURIComponent(cookie.slice(target.length)) : null;
+};
+
+const deleteCookie = (name) => {
+  document.cookie = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+};
+
+window.PitStopCookies = {
+  setCookie,
+  getCookie,
+  deleteCookie,
+};
+
+const THEME_COOKIE = "pitstop_theme";
+
+const updateThemeToggleButtons = () => {
+  const isDark = document.documentElement.classList.contains("dark");
+
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(isDark));
+    button.setAttribute("aria-label", isDark ? "Aktifkan light mode" : "Aktifkan dark mode");
+
+    const icon = button.querySelector("[data-theme-toggle-icon]");
+
+    if (icon) {
+      icon.textContent = isDark ? "☀" : "☾";
+    }
+  });
+};
+
+const applyStoredTheme = () => {
+  document.documentElement.classList.toggle("dark", getCookie(THEME_COOKIE) === "dark");
+  updateThemeToggleButtons();
+};
+
+const initThemeToggle = () => {
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const shouldUseDark = !document.documentElement.classList.contains("dark");
+
+      document.documentElement.classList.toggle("dark", shouldUseDark);
+      setCookie(THEME_COOKIE, shouldUseDark ? "dark" : "light");
+      updateThemeToggleButtons();
+    });
+  });
+};
+
+applyStoredTheme();
+initThemeToggle();
+
 const services = window.PitStopServices ?? {
   "Ganti Oli": { price: 350000, duration: 30 },
   "Servis Berkala": { price: 850000, duration: 120 },

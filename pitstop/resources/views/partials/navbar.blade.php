@@ -6,7 +6,7 @@
 @endphp
 
 <header
-    class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/90 bg-white/95 px-[5%] py-3.5 backdrop-blur">
+    class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/90 bg-white/95 px-[5%] py-3.5 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 dark:text-slate-100">
     <a class="inline-flex items-center gap-3 font-black tracking-[0.08em]" href="{{ url('/') }}">
         <img src="{{ asset('img/pitstop-logo.png') }}" alt="Logo PitStop" class="h-10 w-10">
         <span>PITSTOP</span>
@@ -14,14 +14,14 @@
 
     <input type="checkbox" id="menu-toggle" class="peer sr-only">
     <label for="menu-toggle"
-        class="grid h-11 w-11 cursor-pointer place-items-center rounded-lg border border-slate-200 text-2xl leading-none text-blue-950 lg:hidden"
+        class="grid h-11 w-11 cursor-pointer place-items-center rounded-lg border border-slate-200 text-2xl leading-none text-blue-950 dark:border-slate-700 dark:text-slate-100 lg:hidden"
         aria-label="Buka menu">
         &#9776;
     </label>
 
     <nav
-        class="hidden w-full border-t border-slate-200 bg-white pt-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] peer-checked:grid peer-checked:gap-4 lg:flex lg:w-auto lg:items-center lg:gap-9 lg:border-0 lg:bg-transparent lg:pt-0 lg:shadow-none">
-        <ul class="grid gap-4 text-sm font-bold text-slate-500 lg:flex lg:items-center lg:gap-8">
+        class="hidden w-full border-t border-slate-200 bg-white pt-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] peer-checked:grid peer-checked:gap-4 dark:border-slate-800 dark:bg-slate-950 lg:flex lg:w-auto lg:items-center lg:gap-9 lg:border-0 lg:bg-transparent lg:pt-0 lg:shadow-none">
+        <ul class="grid gap-4 text-sm font-bold text-slate-500 dark:text-slate-300 lg:flex lg:items-center lg:gap-8">
             <li>
                 <a class="{{ request()->is('/') ? $activeClass : $linkClass }}" href="{{ url('/') }}">Beranda</a>
             </li>
@@ -62,6 +62,11 @@
                 </li>
             @endguest
         </ul>
+        <button type="button" data-theme-toggle
+            class="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 bg-white text-lg text-blue-950 transition hover:-translate-y-0.5 hover:border-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-500"
+            aria-label="Aktifkan dark mode" aria-pressed="false">
+            <span data-theme-toggle-icon aria-hidden="true">☾</span>
+        </button>
         @auth
             @unless (Auth::user()->isAdmin())
                 <form method="POST" action="{{ route('logout') }}">

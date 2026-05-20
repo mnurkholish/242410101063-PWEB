@@ -1,3 +1,5 @@
+@config "../../tailwind.config.js";
+
 @import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -33,24 +35,24 @@
     }
 
     .form-feedback.success {
-        @apply border border-emerald-200 bg-emerald-50 text-emerald-800;
+        @apply border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200;
     }
 
     .form-feedback.error {
-        @apply border border-red-200 bg-red-50 text-red-700;
+        @apply border border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200;
     }
 
     .error-message {
-        @apply min-h-[18px] text-xs font-bold text-red-600;
+        @apply min-h-[18px] text-xs font-bold text-red-600 dark:text-red-300;
     }
 
     .form-group.invalid input,
     .form-group.invalid select {
-        @apply border-red-600 ring-4 ring-red-100;
+        @apply border-red-600 ring-4 ring-red-100 dark:border-red-400 dark:ring-red-500/20;
     }
 
     .service-group.invalid .service-option {
-        @apply border-red-300;
+        @apply border-red-300 dark:border-red-400;
     }
 
     #cancelEditButton {
@@ -62,7 +64,7 @@
     }
 
     .muted {
-        @apply text-sm text-slate-500;
+        @apply text-sm text-slate-500 dark:text-slate-400;
     }
 
     .status-badge {
@@ -102,7 +104,7 @@
     }
 
     .empty-state {
-        @apply mt-4 hidden rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-slate-500;
+        @apply mt-4 hidden rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400;
     }
 
     .empty-state.show {
@@ -136,15 +138,15 @@
 
     th,
     td {
-        @apply border-b border-slate-200 px-4 py-4 text-left align-middle;
+        @apply border-b border-slate-200 px-4 py-4 text-left align-middle dark:border-slate-800;
     }
 
     th {
-        @apply bg-slate-50 text-xs font-black uppercase tracking-[0.08em] text-blue-950;
+        @apply bg-slate-50 text-xs font-black uppercase tracking-[0.08em] text-blue-950 dark:bg-slate-950 dark:text-slate-200;
     }
 
     tbody tr {
-        @apply transition hover:bg-slate-50;
+        @apply transition hover:bg-slate-50 dark:hover:bg-slate-800/70;
     }
 }
 
@@ -201,6 +203,11 @@
         border: 1px solid rgb(226 232 240);
         border-radius: 0.5rem;
         background: rgb(248 250 252);
+    }
+
+    .dark tbody tr {
+        border-color: rgb(30 41 59);
+        background: rgb(15 23 42);
     }
 
     td {

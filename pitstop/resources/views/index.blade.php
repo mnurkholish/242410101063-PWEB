@@ -3,8 +3,8 @@
 @section('content')
     @php
         $fieldClass =
-            'min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100';
-        $labelClass = 'text-sm font-extrabold text-slate-800';
+            'min-h-[46px] w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-slate-800 outline-none transition focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:bg-slate-950 dark:focus:ring-blue-500/20';
+        $labelClass = 'text-sm font-extrabold text-slate-800 dark:text-slate-100';
         $buttonClass =
             'inline-flex min-h-[42px] items-center justify-center rounded-lg border-0 px-4 py-3 text-center font-extrabold transition hover:-translate-y-0.5';
     @endphp
@@ -37,10 +37,10 @@
     <div
         class="relative z-10 mx-auto -mt-14 grid w-[min(1400px,90%)] gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
         <aside id="statistik-section"
-            class="grid gap-4 rounded-lg border border-slate-200/90 bg-white p-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:grid-cols-2 lg:sticky lg:top-22 lg:grid-cols-1">
+            class="grid gap-4 rounded-lg border border-slate-200/90 bg-white p-4 shadow-[0_18px_45px_rgba(14,43,82,0.10)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:grid-cols-2 lg:sticky lg:top-22 lg:grid-cols-1">
             <div class="sm:col-span-2 lg:col-span-1">
                 <p class="text-xs font-black uppercase tracking-[0.12em] text-amber-500">Ringkasan bengkel</p>
-                <h2 class="mt-1 text-xl font-black leading-tight text-slate-800">Statistik Hari Ini</h2>
+                <h2 class="mt-1 text-xl font-black leading-tight text-slate-800 dark:text-slate-100">Statistik Hari Ini</h2>
             </div>
 
             <x-stat-card judul="Total Booking" nilai="0" ikon="#" warna="blue" id="totalBooking" />
@@ -48,17 +48,17 @@
             <x-stat-card judul="Menunggu" nilai="0" ikon="!" warna="amber" id="totalMenunggu" />
             <x-stat-card judul="Selesai" nilai="0" ikon="OK" warna="emerald" id="totalSelesai" />
 
-            <section class="rounded-lg border border-blue-100 bg-blue-50/70 p-4" data-weather-widget
+            <section class="rounded-lg border border-blue-100 bg-blue-50/70 p-4 dark:border-slate-700 dark:bg-slate-950" data-weather-widget
                 data-weather-api="https://wttr.in/Jember?format=j1" aria-live="polite">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs font-black uppercase tracking-[0.12em] text-blue-700">Cuaca area bengkel</p>
-                        <h3 class="mt-1 text-lg font-black leading-tight text-blue-950" data-weather-location>
+                        <p class="text-xs font-black uppercase tracking-[0.12em] text-blue-700 dark:text-blue-300">Cuaca area bengkel</p>
+                        <h3 class="mt-1 text-lg font-black leading-tight text-blue-950 dark:text-slate-100" data-weather-location>
                             Jember
                         </h3>
                     </div>
                     <span
-                        class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-700 shadow-sm"
+                        class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white text-xs font-black text-blue-700 shadow-sm dark:bg-slate-800 dark:text-blue-300"
                         data-weather-icon>
                         --
                     </span>
@@ -66,22 +66,22 @@
 
                 <div class="mt-4 grid gap-2">
                     <div class="flex items-end gap-2">
-                        <strong class="text-3xl font-black leading-none text-slate-800" data-weather-temp>
+                        <strong class="text-3xl font-black leading-none text-slate-800 dark:text-slate-100" data-weather-temp>
                             --
                         </strong>
-                        <span class="pb-1 text-sm font-extrabold text-slate-500">Celsius</span>
+                        <span class="pb-1 text-sm font-extrabold text-slate-500 dark:text-slate-400">Celsius</span>
                     </div>
-                    <p class="text-sm font-bold text-slate-600" data-weather-description>
+                    <p class="text-sm font-bold text-slate-600 dark:text-slate-300" data-weather-description>
                         Mengambil data cuaca terkini...
                     </p>
                 </div>
 
-                <div class="mt-4 hidden items-center gap-2 text-sm font-extrabold text-blue-700" data-weather-loading>
+                <div class="mt-4 hidden items-center gap-2 text-sm font-extrabold text-blue-700 dark:text-blue-300" data-weather-loading>
                     <span class="h-4 w-4 animate-spin rounded-full border-2 border-blue-200 border-t-blue-700"></span>
                     Memuat cuaca
                 </div>
 
-                <p class="mt-4 hidden rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-bold text-red-600"
+                <p class="mt-4 hidden rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-bold text-red-600 dark:border-red-500/40 dark:bg-red-950/30 dark:text-red-300"
                     data-weather-error>
                     Data cuaca belum bisa dimuat.
                 </p>
@@ -90,12 +90,12 @@
 
         <div class="grid min-w-0 gap-6">
             <section
-                class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:p-8"
+                class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:p-8"
                 id="booking-section">
                 <div class="mb-5">
                     <p id="formModeLabel" class="text-xs font-black uppercase tracking-[0.12em] text-amber-500">Form
                         booking service</p>
-                    <h2 id="formTitle" class="mt-1 text-2xl font-black leading-tight text-slate-800">Tambah Booking Baru
+                    <h2 id="formTitle" class="mt-1 text-2xl font-black leading-tight text-slate-800 dark:text-slate-100">Tambah Booking Baru
                     </h2>
                 </div>
                 <div class="form-feedback" id="formFeedback" role="status"></div>
@@ -174,19 +174,19 @@
                         <div class="grid gap-3 md:grid-cols-2">
                             @forelse ($layanans as $layanan)
                                 <label
-                                    class="service-option flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5 transition hover:border-blue-600 hover:bg-blue-50">
+                                    class="service-option flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5 transition hover:border-blue-600 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-blue-400 dark:hover:bg-slate-800">
                                     <input class="mt-1 h-4.5 w-4.5 accent-blue-600" type="checkbox" name="layanan_id[]"
                                         value="{{ $layanan->id }}">
                                     <span class="grid min-w-0 gap-0.5 font-extrabold">
                                         {{ $layanan->nama }}
                                         <small
-                                            class="text-xs font-bold text-slate-500">Rp{{ number_format($layanan->estimasi_harga, 0, ',', '.') }}
+                                            class="text-xs font-bold text-slate-500 dark:text-slate-400">Rp{{ number_format($layanan->estimasi_harga, 0, ',', '.') }}
                                             / {{ $layanan->estimasi_durasi }} menit</small>
                                     </span>
                                 </label>
                             @empty
                                 <p
-                                    class="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-bold text-slate-500">
+                                    class="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-bold text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
                                     Belum ada layanan aktif.
                                 </p>
                             @endforelse
@@ -197,22 +197,22 @@
                         @enderror
                     </div>
 
-                    <div class="mt-5 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-2">
+                    <div class="mt-5 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950 md:grid-cols-2">
                         <div class="grid gap-1">
-                            <span class="text-xs font-extrabold uppercase text-slate-500">Kode otomatis</span>
-                            <strong id="kodePreview" class="text-blue-950">Dibuat saat disimpan</strong>
+                            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Kode otomatis</span>
+                            <strong id="kodePreview" class="text-blue-950 dark:text-blue-200">Dibuat saat disimpan</strong>
                         </div>
                         <div class="grid gap-1">
-                            <span class="text-xs font-extrabold uppercase text-slate-500">Estimasi biaya</span>
-                            <strong id="estimasiPreview" class="text-blue-950">Rp0</strong>
+                            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Estimasi biaya</span>
+                            <strong id="estimasiPreview" class="text-blue-950 dark:text-blue-200">Rp0</strong>
                         </div>
                         <div class="grid gap-1">
-                            <span class="text-xs font-extrabold uppercase text-slate-500">Estimasi durasi</span>
-                            <strong id="durasiPreview" class="text-blue-950">0 menit</strong>
+                            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Estimasi durasi</span>
+                            <strong id="durasiPreview" class="text-blue-950 dark:text-blue-200">0 menit</strong>
                         </div>
                         <div class="grid gap-1">
-                            <span class="text-xs font-extrabold uppercase text-slate-500">Status sistem</span>
-                            <strong id="statusPreview" class="text-blue-950">Menunggu</strong>
+                            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Status sistem</span>
+                            <strong id="statusPreview" class="text-blue-950 dark:text-blue-200">Menunggu</strong>
                         </div>
                     </div>
 
@@ -222,11 +222,11 @@
                             id="submitButton">
                             Simpan Booking
                         </button>
-                        <button type="button" class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300"
+                        <button type="button" class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                             id="resetButton">
                             Reset
                         </button>
-                        <button type="button" class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300"
+                        <button type="button" class="{{ $buttonClass }} bg-slate-200 text-blue-950 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                             id="cancelEditButton">
                             Batal Edit
                         </button>
@@ -235,13 +235,13 @@
             </section>
 
             <section
-                class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] sm:p-8"
+                class="rounded-lg border border-slate-200/90 bg-white p-5 shadow-[0_18px_45px_rgba(14,43,82,0.10)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:p-8"
                 id="data-section">
                 <div class="grid gap-2">
                     <div class="mb-3">
                         <p class="text-xs font-black uppercase tracking-[0.12em] text-amber-500">Antrean dan riwayat
                         </p>
-                        <h2 class="mt-1 text-2xl font-black leading-tight text-slate-800">Daftar Booking Service</h2>
+                        <h2 class="mt-1 text-2xl font-black leading-tight text-slate-800 dark:text-slate-100">Daftar Booking Service</h2>
                     </div>
 
                     <div class="mb-4 grid gap-3 md:grid-cols-[1.3fr_1fr_1fr]">
