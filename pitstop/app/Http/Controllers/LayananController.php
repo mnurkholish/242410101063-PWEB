@@ -5,128 +5,60 @@ namespace App\Http\Controllers;
 use App\Models\Layanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class LayananController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $layanans = Layanan::latest()->paginate(10);
+        $keyword = trim((string) $request->input('keyword', ''));
 
-        return view('layanan.index', compact('layanans'));
-    }
+        $query = Layanan::query()
+            ->aktif()
+            ->when($keyword !== '', function ($query) use ($keyword) {
+                $query->where(function ($query) use ($keyword) {
+                    $query
+                        ->where('nama', 'like', "%{$keyword}%")
+                        ->orWhere('estimasi_harga', 'like', "%{$keyword}%");
+                });
+            })
+            ->latest();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('layanan.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate($this->rules());
-
-        if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $this->uploadGambar($request);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'layanans' => $query->get()->map(fn (Layanan $layanan): array => $this->formatLayanan($layanan)),
+            ]);
         }
 
-        Layanan::create($validated);
-
-        return redirect()
-            ->route('admin.layanan.index')
-            ->with('success', 'Layanan berhasil ditambahkan.');
+        return view('layanan.index', [
+            'layanans' => $query->paginate(10)->withQueryString(),
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Layanan $layanan)
-    {
-        return view('layanan.show', compact('layanan'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Layanan $layanan)
-    {
-        return view('layanan.edit', compact('layanan'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Layanan $layanan)
-    {
-        $validated = $request->validate($this->rules());
-
-        if ($request->hasFile('gambar')) {
-            $this->deleteGambar($layanan->gambar);
-            $validated['gambar'] = $this->uploadGambar($request);
-        } else {
-            unset($validated['gambar']);
-        }
-
-        $layanan->update($validated);
-
-        return redirect()
-            ->route('admin.layanan.index')
-            ->with('success', 'Layanan berhasil diperbarui.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Layanan $layanan)
-    {
-        $this->deleteGambar($layanan->gambar);
-
-        $layanan->delete();
-
-        return redirect()
-            ->route('admin.layanan.index')
-            ->with('success', 'Layanan berhasil dihapus.');
-    }
-
-    private function rules(): array
+    private function formatLayanan(Layanan $layanan): array
     {
         return [
-            'nama' => ['required', 'string', 'min:3', 'max:255'],
-            'deskripsi' => ['nullable', 'string'],
-            'estimasi_harga' => ['required', 'integer', 'min:0'],
-            'estimasi_durasi' => ['required', 'integer', 'min:1'],
-            'gambar' => ['nullable', 'image', 'mimes:jpg,png', 'max:2048'],
-            'is_active' => ['required', 'boolean'],
+            'nama' => $layanan->nama,
+            'deskripsi' => $layanan->deskripsi ?? 'Belum ada deskripsi.',
+            'estimasiHarga' => $layanan->estimasi_harga,
+            'estimasiDurasi' => $layanan->estimasi_durasi,
+            'status' => 'Aktif',
+            'statusClass' => 'status-selesai',
+            'dibuat' => $layanan->created_at?->format('d M Y'),
+            'gambarUrl' => $layanan->gambar && Storage::disk('public')->exists($layanan->gambar)
+                ? Storage::url($layanan->gambar)
+                : asset('img/pitstop-logo.png'),
+            'showUrl' => route('layanan.show', $layanan),
+            'editUrl' => null,
+            'deleteUrl' => null,
         ];
     }
 
-    private function deleteGambar(?string $gambar): void
+
+    public function show(Layanan $layanan)
     {
-        if ($gambar && Storage::disk('public')->exists($gambar)) {
-            Storage::disk('public')->delete($gambar);
-        }
+        abort_unless($layanan->is_active, 404);
+
+        return view('layanan.show', compact('layanan'));
     }
 
-    private function uploadGambar(Request $request): string
-    {
-        $file = $request->file('gambar');
-        $filename = Str::uuid().'.'.$file->extension();
-        $directory = storage_path('app/public/layanan');
-
-        if (! is_dir($directory)) {
-            mkdir($directory, 0755, true);
-        }
-
-        $file->move($directory, $filename);
-
-        return 'layanan/'.$filename;
-    }
 }

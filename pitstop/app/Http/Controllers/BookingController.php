@@ -11,21 +11,62 @@ use Illuminate\Validation\Rule;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $keyword = trim((string) $request->input('keyword', ''));
+        $status = match (strtolower($keyword)) {
+            'menunggu' => 'pending',
+            'diproses' => 'diproses',
+            'selesai' => 'selesai',
+            'dibatalkan' => 'dibatalkan',
+            default => $keyword,
+        };
+
+        $bookings = Booking::query()
+            ->with(['layanans', 'user'])
+            ->where('user_id', auth()->id())
+            ->when($keyword !== '', function ($query) use ($keyword, $status) {
+                $query->where(function ($query) use ($keyword, $status) {
+                    $query
+                        ->where('nomor_plat', 'like', "%{$keyword}%")
+                        ->orWhere('status', 'like', "%{$status}%")
+                        ->orWhereHas('layanans', fn ($query) => $query->where('nama', 'like', "%{$keyword}%"));
+
+                    if (preg_match('/^PS-?\d+$/i', $keyword)) {
+                        $query->orWhere('id', (int) preg_replace('/\D/', '', $keyword));
+                    }
+                });
+            })
+            ->latest()
+            ->get()
+            ->map(fn (Booking $booking): array => [
+                'kodeBooking' => 'PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT),
+                'namaPelanggan' => $booking->user?->name ?? auth()->user()?->name,
+                'nomorPlat' => $booking->nomor_plat,
+                'jenisKendaraan' => $booking->jenis_kendaraan,
+                'merekKendaraan' => $booking->merek_kendaraan,
+                'jenisService' => $booking->layanans->pluck('nama')->all(),
+                'tanggalService' => $booking->start_time?->format('Y-m-d'),
+                'jamService' => $booking->start_time?->format('H:i'),
+                'estimasiBiaya' => $booking->total_estimasi_harga,
+                'estimasiDurasi' => $booking->total_estimasi_durasi,
+                'statusBooking' => match ($booking->status) {
+                    'diproses' => 'Diproses',
+                    'selesai' => 'Selesai',
+                    'dibatalkan' => 'Dibatalkan',
+                    default => 'Menunggu',
+                },
+            ])
+            ->all();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'bookings' => $bookings,
+            ]);
+        }
+
         return view('bookings.index', [
-            'bookings' => $this->userBookings(),
-        ]);
-    }
-
-    public function search(Request $request)
-    {
-        $validated = $request->validate([
-            'keyword' => ['nullable', 'string', 'max:80'],
-        ]);
-
-        return response()->json([
-            'bookings' => $this->userBookings($validated['keyword'] ?? ''),
+            'bookings' => $bookings,
         ]);
     }
 
@@ -80,66 +121,4 @@ class BookingController extends Controller
             ->with('success', 'Booking PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT).' berhasil disimpan.');
     }
 
-    private function userBookings(string $keyword = ''): array
-    {
-        $keyword = trim($keyword);
-
-        return Booking::query()
-            ->with(['layanans', 'user'])
-            ->where('user_id', auth()->id())
-            ->when($keyword !== '', fn ($query) => $this->applySearch($query, $keyword))
-            ->latest()
-            ->get()
-            ->map(fn (Booking $booking): array => $this->formatBooking($booking))
-            ->all();
-    }
-
-    private function applySearch($query, string $keyword): void
-    {
-        $status = match (strtolower($keyword)) {
-            'menunggu' => 'pending',
-            'diproses' => 'diproses',
-            'selesai' => 'selesai',
-            'dibatalkan' => 'dibatalkan',
-            default => $keyword,
-        };
-
-        $query->where(function ($query) use ($keyword, $status) {
-            $query
-                ->where('nomor_plat', 'like', "%{$keyword}%")
-                ->orWhere('status', 'like', "%{$status}%")
-                ->orWhereHas('layanans', fn ($query) => $query->where('nama', 'like', "%{$keyword}%"));
-
-            if (preg_match('/^PS-?\d+$/i', $keyword)) {
-                $query->orWhere('id', (int) preg_replace('/\D/', '', $keyword));
-            }
-        });
-    }
-
-    private function formatBooking(Booking $booking): array
-    {
-        return [
-            'kodeBooking' => 'PS-'.str_pad((string) $booking->id, 3, '0', STR_PAD_LEFT),
-            'namaPelanggan' => $booking->user?->name ?? auth()->user()?->name,
-            'nomorPlat' => $booking->nomor_plat,
-            'jenisKendaraan' => $booking->jenis_kendaraan,
-            'merekKendaraan' => $booking->merek_kendaraan,
-            'jenisService' => $booking->layanans->pluck('nama')->all(),
-            'tanggalService' => $booking->start_time?->format('Y-m-d'),
-            'jamService' => $booking->start_time?->format('H:i'),
-            'estimasiBiaya' => $booking->total_estimasi_harga,
-            'estimasiDurasi' => $booking->total_estimasi_durasi,
-            'statusBooking' => $this->statusLabel($booking->status),
-        ];
-    }
-
-    private function statusLabel(string $status): string
-    {
-        return match ($status) {
-            'diproses' => 'Diproses',
-            'selesai' => 'Selesai',
-            'dibatalkan' => 'Dibatalkan',
-            default => 'Menunggu',
-        };
-    }
 }
