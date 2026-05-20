@@ -86,6 +86,38 @@
                     Data cuaca belum bisa dimuat.
                 </p>
             </section>
+
+            <section class="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.12em] text-amber-500">Session landing page</p>
+                    <h2 class="mt-1 text-lg font-black leading-tight text-slate-800 dark:text-slate-100">
+                        Riwayat Kunjungan
+                    </h2>
+                </div>
+
+                <div class="grid gap-3">
+                    <div class="rounded-lg bg-white p-3 dark:bg-slate-900">
+                        <p class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Jumlah</p>
+                        <strong class="text-2xl font-black text-blue-950 dark:text-blue-200">{{ $visitCount }}</strong>
+                    </div>
+                    <div class="rounded-lg bg-white p-3 dark:bg-slate-900">
+                        <p class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Pertama</p>
+                        <strong class="text-sm font-black text-slate-800 dark:text-slate-100">{{ $firstVisitAt }}</strong>
+                    </div>
+                    <div class="rounded-lg bg-white p-3 dark:bg-slate-900">
+                        <p class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400">Terakhir</p>
+                        <strong class="text-sm font-black text-slate-800 dark:text-slate-100">{{ $lastVisitAt }}</strong>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ route('home.reset-visits') }}">
+                    @csrf
+                    <button type="submit"
+                        class="inline-flex min-h-[42px] w-full items-center justify-center rounded-lg bg-red-50 px-4 py-3 text-center font-extrabold text-red-600 transition hover:-translate-y-0.5 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20">
+                        Reset Hitungan
+                    </button>
+                </form>
+            </section>
         </aside>
 
         <div class="grid min-w-0 gap-6">

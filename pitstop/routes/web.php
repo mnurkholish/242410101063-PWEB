@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [DashboardController::class, 'home'])->name('home');
 Route::view('/tentang', 'tentang')->name('tentang');
 Route::view('/kontak', 'kontak')->name('kontak');
+Route::post('/reset-kunjungan', [DashboardController::class, 'resetVisits'])->name('home.reset-visits');
 Route::view('/preferensi', 'preferensi')->name('preferensi');
 Route::post('/preferensi', [PreferenceController::class, 'store'])->name('preferensi.store');
 
