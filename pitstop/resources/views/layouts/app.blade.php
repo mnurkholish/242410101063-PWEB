@@ -7,6 +7,19 @@
 
         <title>@yield('title', config('app.name', 'PitStop'))</title>
 
+        <script>
+            (() => {
+                const themeCookie = 'pitstop_theme';
+                const target = `${encodeURIComponent(themeCookie)}=`;
+                const storedTheme = document.cookie
+                    .split('; ')
+                    .find((item) => item.startsWith(target))
+                    ?.slice(target.length);
+
+                document.documentElement.classList.toggle('dark', decodeURIComponent(storedTheme || '') === 'dark');
+            })();
+        </script>
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-100 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">

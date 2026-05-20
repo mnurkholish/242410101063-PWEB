@@ -23,43 +23,6 @@ window.PitStopCookies = {
   deleteCookie,
 };
 
-const THEME_COOKIE = "pitstop_theme";
-
-const updateThemeToggleButtons = () => {
-  const isDark = document.documentElement.classList.contains("dark");
-
-  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-    button.setAttribute("aria-pressed", String(isDark));
-    button.setAttribute("aria-label", isDark ? "Aktifkan light mode" : "Aktifkan dark mode");
-
-    const icon = button.querySelector("[data-theme-toggle-icon]");
-
-    if (icon) {
-      icon.textContent = isDark ? "☀" : "☾";
-    }
-  });
-};
-
-const applyStoredTheme = () => {
-  document.documentElement.classList.toggle("dark", getCookie(THEME_COOKIE) === "dark");
-  updateThemeToggleButtons();
-};
-
-const initThemeToggle = () => {
-  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const shouldUseDark = !document.documentElement.classList.contains("dark");
-
-      document.documentElement.classList.toggle("dark", shouldUseDark);
-      setCookie(THEME_COOKIE, shouldUseDark ? "dark" : "light");
-      updateThemeToggleButtons();
-    });
-  });
-};
-
-applyStoredTheme();
-initThemeToggle();
-
 const services = window.PitStopServices ?? {
   "Ganti Oli": { price: 350000, duration: 30 },
   "Servis Berkala": { price: 850000, duration: 120 },

@@ -62,7 +62,7 @@
                 </li>
             @endguest
         </ul>
-        <button type="button" data-theme-toggle
+        <button type="button" data-theme-toggle data-theme-cookie="pitstop_theme"
             class="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 bg-white text-lg text-blue-950 transition hover:-translate-y-0.5 hover:border-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-500"
             aria-label="Aktifkan dark mode" aria-pressed="false">
             <span data-theme-toggle-icon aria-hidden="true">☾</span>
@@ -80,3 +80,59 @@
         @endauth
     </nav>
 </header>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cookie = window.PitStopCookies;
+            const buttons = document.querySelectorAll('[data-theme-toggle]');
+
+            if (!cookie || !buttons.length) {
+                return;
+            }
+
+            const updateThemeToggleButtons = () => {
+                const isDark = document.documentElement.classList.contains('dark');
+
+                buttons.forEach((button) => {
+                    button.setAttribute('aria-pressed', String(isDark));
+                    button.setAttribute('aria-label', isDark ? 'Aktifkan light mode' : 'Aktifkan dark mode');
+
+                    const icon = button.querySelector('[data-theme-toggle-icon]');
+
+                    if (icon) {
+                        icon.textContent = isDark ? '☀' : '☾';
+                    }
+                });
+            };
+
+            const applyStoredTheme = () => {
+                const themeCookie = buttons[0]?.dataset.themeCookie;
+
+                if (!themeCookie) {
+                    return;
+                }
+
+                document.documentElement.classList.toggle('dark', cookie.getCookie(themeCookie) === 'dark');
+                updateThemeToggleButtons();
+            };
+
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const themeCookie = button.dataset.themeCookie;
+
+                    if (!themeCookie) {
+                        return;
+                    }
+
+                    const shouldUseDark = !document.documentElement.classList.contains('dark');
+                    document.documentElement.classList.toggle('dark', shouldUseDark);
+                    cookie.setCookie(themeCookie, shouldUseDark ? 'dark' : 'light');
+                    updateThemeToggleButtons();
+                });
+            });
+
+            applyStoredTheme();
+        });
+    </script>
+@endpush
